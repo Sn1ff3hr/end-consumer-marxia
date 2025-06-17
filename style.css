@@ -54,23 +54,19 @@ body {
   background-color: #00b89f; /* Darker accent */
 }
 
-/* Carousel Styles */
-.carousel-container {
-  position: relative;
+/* Product Viewer (formerly Carousel) Styles */
+.product-viewer { /* Was .carousel-container */
+  position: relative; /* For arrow positioning */
   margin-bottom: 1.5rem;
-  overflow: hidden; /* Hide parts of cards that stick out during scroll */
+  padding: 0 3rem; /* Add some padding so arrows aren't flush with container edges */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the single product display */
 }
 
-.product-grid {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding-bottom: 1rem; /* For shadow visibility if cards have shadow */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-.product-grid::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+/*
+  REMOVED .product-grid styles as it's no longer used for carousel display
+*/
 
 .arrow {
   position: absolute;
@@ -94,60 +90,59 @@ body {
 .arrow-left { left: 0.5rem; }
 .arrow-right { right: 0.5rem; }
 
-.product-card {
-  flex: 0 0 170px; /* Slightly wider cards */
+/* Single Product Display Styles */
+.single-product-display {
   background: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: var(--radius);
   text-align: center;
-  padding: 1rem;
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.product-card:hover {
-  transform: translateY(-3px);
+  padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.product-card img {
   width: 100%;
-  height: 120px; /* Fixed height for images */
-  object-fit: cover;
-  margin-bottom: 0.75rem;
-  cursor: zoom-in;
-  border-radius: calc(var(--radius) - 0.2em); /* Inner radius */
+  max-width: 320px;
+  margin: 0 auto;
 }
 
-.product-name {
+.single-product-display img#currentProductImg {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  cursor: zoom-in;
+  border-radius: calc(var(--radius) - 0.4em);
+  border: 1px solid #eee;
+}
+
+.single-product-display h3#currentProductName {
   font-weight: bold;
-  margin-bottom: 0.25rem;
-  font-size: 0.95rem;
-  height: 2.8em; /* Allow for two lines of text */
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  min-height: 2.4em;
   overflow: hidden;
 }
 
-.product-price {
+.single-product-display p#currentProductPrice {
   color: var(--primary);
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
 }
 
 .product-controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
 
 .product-controls button {
-  width: 2.2rem;
-  height: 2.2rem;
-  font-size: 1.3rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
   border: none;
-  border-radius: 50%; /* Circular buttons */
+  border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
@@ -156,20 +151,29 @@ body {
 }
 
 .btn-add { background: var(--primary); color: white; }
-.btn-add:hover { background: #3a1ca0; } /* Darker primary */
+.btn-add:hover { background: #3a1ca0; }
 .btn-remove { background: var(--danger); color: white; }
-.btn-remove:hover { background: #d03858; } /* Darker danger */
+.btn-remove:hover { background: #d03858; }
 
 .product-qty-display {
   font-weight: bold;
-  font-size: 0.9rem;
-  min-width: 20px; /* Ensure space for qty number */
+  font-size: 1rem;
+  min-width: 25px;
 }
+
+/*
+  REMOVED .product-card styles as they are superseded by .single-product-display
+  or adapted into .single-product-display.
+  Also removed .product-card:hover effects.
+  The old .product-name and .product-price styles are also implicitly replaced
+  by those within .single-product-display for #currentProductName and #currentProductPrice.
+*/
+
 
 /* Order Summary Styles */
 .order-summary {
   margin-top: 1.5rem;
-  background: #f9f9f9; /* Slightly different background for summary */
+  background: #f9f9f9;
   padding: 1.5rem;
   border-radius: var(--radius);
   box-shadow: inset 0 0 5px rgba(0,0,0,0.03);
@@ -185,14 +189,14 @@ body {
 .order-flex {
   display: flex;
   justify-content: space-between;
-  gap: 1.5rem; /* Reduced gap */
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
 .order-items {
   flex: 1;
-  min-width: 280px; /* Ensure it doesn't get too squeezed */
-  max-height: 180px; /* Fixed height for item list */
+  min-width: 280px;
+  max-height: 180px;
   overflow-y: auto;
   border: 1px solid #e0e0e0;
   background: #ffffff;
@@ -201,7 +205,6 @@ body {
   list-style: none;
   margin: 0;
 }
-/* Custom scrollbar for order items */
 .order-items::-webkit-scrollbar {
   width: 8px;
 }
@@ -212,7 +215,6 @@ body {
 .order-items::-webkit-scrollbar-track {
   background-color: #f0f0f0;
 }
-
 
 .order-items li {
   display: flex;
@@ -231,9 +233,9 @@ body {
 }
 
 .order-totals {
-  flex-basis: 280px; /* Fixed base width */
+  flex-basis: 280px;
   flex-grow: 1;
-  background: #eef2f7; /* Lighter than summary bg */
+  background: #eef2f7;
   border-radius: calc(var(--radius) - 0.2em);
   padding: 1rem;
   box-shadow: 0 0 5px rgba(0,0,0,0.05);
@@ -252,7 +254,6 @@ body {
   color: #555;
 }
 
-
 /* General Button Styles (like PAY button) */
 .btn {
   display: block;
@@ -270,7 +271,7 @@ body {
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 .btn:hover {
-  background: #3a1ca0; /* Darker primary */
+  background: #3a1ca0;
 }
 .btn:active {
   transform: scale(0.98);
@@ -280,15 +281,15 @@ body {
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.75); /* Darker overlay */
-  display: none; /* Hidden by default */
+  background: rgba(0,0,0,0.75);
+  display: none;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.modal-overlay.active { /* Class to show modal */
+.modal-overlay.active {
   display: flex;
   opacity: 1;
 }
@@ -298,7 +299,7 @@ body {
   max-width: 90%;
   max-height: 90%;
   background: var(--surface);
-  padding: 0.5rem; /* Padding around image */
+  padding: 0.5rem;
   border-radius: var(--radius);
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   transform: scale(0.9);
@@ -309,25 +310,25 @@ body {
 }
 
 .modal-content img {
-  display: block; /* Remove extra space below img */
+  display: block;
   max-width: 100%;
-  max-height: calc(90vh - 2rem); /* Max height considering padding */
+  max-height: calc(90vh - 2rem);
   cursor: zoom-out;
   border-radius: calc(var(--radius) - 0.2em);
 }
 
 .modal-close {
   position: absolute;
-  top: -15px; /* Position outside the modal content slightly */
+  top: -15px;
   right: -15px;
   background: var(--danger);
   color: white;
-  border: 2px solid white; /* White border for better visibility */
+  border: 2px solid white;
   border-radius: 50%;
   width: 35px;
   height: 35px;
   font-size: 1.4rem;
-  line-height: 32px; /* Center the X */
+  line-height: 32px;
   text-align: center;
   cursor: pointer;
   z-index: 1001;
@@ -335,7 +336,7 @@ body {
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 .modal-close:hover {
-  background-color: #c0392b; /* Darker danger */
+  background-color: #c0392b;
   transform: rotate(90deg);
 }
 
@@ -346,11 +347,9 @@ body {
     gap: 1rem;
   }
   .order-totals {
-    flex-basis: auto; /* Allow it to take full width */
+    flex-basis: auto;
   }
-  .product-card {
-    flex: 0 0 150px; /* Slightly smaller cards on mobile */
-  }
+  /* Removed .product-card responsive styles */
   .header {
     flex-direction: column;
     gap: 0.5rem;
@@ -362,6 +361,27 @@ body {
   .lang-switch {
     align-self: flex-end;
   }
+  .product-viewer {
+    padding: 0 2rem; /* Less padding on smaller screens */
+  }
+  .single-product-display {
+    padding: 1rem;
+    max-width: 280px;
+  }
+  .single-product-display h3#currentProductName {
+    font-size: 1.1rem;
+  }
+  .single-product-display p#currentProductPrice {
+    font-size: 1rem;
+  }
+  .product-controls button {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.3rem;
+  }
+  .product-qty-display {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -371,15 +391,19 @@ body {
   .container {
     padding: 1rem;
   }
-  .product-card {
-    flex: 0 0 130px; /* Even smaller cards */
+  /* Removed .product-card responsive styles */
+  .product-viewer {
+    padding: 0 0.5rem; /* Minimal padding for arrows to be near edges */
   }
-  .product-card img {
-    height: 100px;
-  }
-  .arrow { /* Make arrows smaller on mobile */
+  .arrow {
     font-size: 1.4rem;
     padding: 0.2rem 0.5rem;
+  }
+  .single-product-display {
+    max-width: calc(100% - 4rem); /* Ensure arrows don't overlap content too much */
+  }
+  .single-product-display img#currentProductImg {
+    height: 160px;
   }
   .modal-close {
     width: 30px;
