@@ -7,8 +7,9 @@ const products = [
   { id: 'p5', name: 'Ambient LED Strip', price: 22.75, qty: 0, img: 'https://via.placeholder.com/300x200?text=LED+Strip' },
 ];
 
+let currentIndex = 0;
+
 // DOM Elements
-const productGrid = document.getElementById('productGrid');
 const orderList = document.getElementById('orderList');
 const subtotalEl = document.getElementById('subtotal');
 const vatEl = document.getElementById('vat');
@@ -16,7 +17,15 @@ const totalEl = document.getElementById('total');
 const modalOverlay = document.getElementById('modalOverlay');
 const modalImage = document.getElementById('modalImage');
 
-// Language specific text
+// Single Product View DOM Elements
+const currentProductImgEl = document.getElementById('currentProductImg');
+const currentProductNameEl = document.getElementById('currentProductName');
+const currentProductPriceEl = document.getElementById('currentProductPrice');
+const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
+const singleViewAddBtn = document.getElementById('singleViewAddBtn');
+const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
+
+// Language specific text (translations object remains the same)
 const translations = {
   en: {
     appTitle: 'Order App',
@@ -25,8 +34,8 @@ const translations = {
     subtotalLabel: 'Subtotal',
     vatLabel: 'VAT',
     totalLabel: 'Total',
-    emptyItem: '(empty)',
-    qtyLabel: 'Qty',
+    emptyItem: '&nbsp;', // Changed from '(empty)'
+    qtyLabel: 'Qty', // This might be used if we add a static "Qty" label
     orderAlert: '✅ Order submitted (simulated). Thank you!'
   },
   es: {
@@ -36,58 +45,65 @@ const translations = {
     subtotalLabel: 'Subtotal',
     vatLabel: 'IVA',
     totalLabel: 'Total',
-    emptyItem: '(vacío)',
+    emptyItem: '&nbsp;', // Changed from '(vacío)'
     qtyLabel: 'Cant',
     orderAlert: '✅ Pedido enviado (simulado). ¡Gracias!'
   }
 };
-let currentLang = 'en'; // Default language
+let currentLang = 'en';
 
-// Render Products into Carousel
-function renderProducts() {
-  productGrid.innerHTML = ''; // Clear existing products
-  products.forEach((product, index) => {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.innerHTML = `
-      <img src="${product.img}" alt="${product.name}" onclick="openModal('${product.img}')" />
-      <div class="product-name">${product.name}</div>
-      <div class="product-price">$${product.price.toFixed(2)}</div>
-      <div class="product-controls">
-        <button class="btn-remove" onclick="updateQty(${index}, -1)" aria-label="Remove one ${product.name}">-</button>
-        <span class="product-qty-display" id="qty-${product.id}">${product.qty}</span>
-        <button class="btn-add" onclick="updateQty(${index}, 1)" aria-label="Add one ${product.name}">+</button>
-      </div>
-    `;
-    productGrid.appendChild(card);
-  });
-  updateSummary(); // Update summary whenever products are re-rendered
-}
-
-// Update Product Quantity
-function updateQty(index, change) {
-  products[index].qty = Math.max(0, products[index].qty + change);
-  // Update only the specific product's quantity display for efficiency
-  const qtyDisplay = document.getElementById(`qty-${products[index].id}`);
-  if (qtyDisplay) {
-    qtyDisplay.textContent = products[index].qty;
+// Render Current Product in Single View
+function renderCurrentProductView() {
+  if (products.length === 0) {
+    // Handle case with no products (e.g., clear display or show a message)
+    currentProductImgEl.src = '';
+    currentProductImgEl.alt = 'No product available';
+    currentProductNameEl.textContent = 'N/A';
+    currentProductPriceEl.textContent = '$0.00';
+    singleViewProductQtyEl.textContent = '0';
+    singleViewAddBtn.setAttribute('aria-label', `Add one item`);
+    singleViewRemoveBtn.setAttribute('aria-label', `Remove one item`);
+    updateSummary(); // Still update summary to show empty totals
+    return;
   }
-  // If not found (e.g. during initial full renderProducts), renderProducts will handle it.
-  // For robustness, especially if cards were dynamically added/removed, a full renderProducts() might be safer
-  // but for just qty change, updating the span is more performant.
-  // Let's stick to re-rendering the specific span and then always update summary.
+  const product = products[currentIndex];
+  currentProductImgEl.src = product.img;
+  currentProductImgEl.alt = product.name;
+  currentProductNameEl.textContent = product.name;
+  currentProductPriceEl.textContent = `$${product.price.toFixed(2)}`;
+  singleViewProductQtyEl.textContent = product.qty;
+
+  // Update aria-labels for controls
+  singleViewAddBtn.setAttribute('aria-label', `Add one ${product.name}`);
+  singleViewRemoveBtn.setAttribute('aria-label', `Remove one ${product.name}`);
+
   updateSummary();
 }
 
-// Update Order Summary
+// Navigate Products (for arrow buttons)
+function navigateProduct(direction) {
+  if (products.length === 0) return;
+  currentIndex = (currentIndex + direction + products.length) % products.length;
+  renderCurrentProductView();
+}
+
+// Update Product Quantity (for +/- buttons in single view)
+function updateQty(change) {
+  if (products.length === 0) return; // Should not happen if buttons are disabled/hidden for no products
+  products[currentIndex].qty = Math.max(0, products[currentIndex].qty + change);
+  singleViewProductQtyEl.textContent = products[currentIndex].qty;
+  updateSummary();
+}
+
+// Update Order Summary (modified emptyItem handling in previous step)
 function updateSummary() {
-  orderList.innerHTML = ''; // Clear existing items
+  orderList.innerHTML = '';
   let subtotal = 0;
-  const vatRate = 0.12; // 12% VAT
+  const vatRate = 0.12;
 
   const activeProducts = products.filter(p => p.qty > 0);
 
-  for (let i = 0; i < 5; i++) { // Display up to 5 lines in summary as per sample
+  for (let i = 0; i < 5; i++) {
     const li = document.createElement('li');
     if (activeProducts[i]) {
       const p = activeProducts[i];
@@ -95,8 +111,7 @@ function updateSummary() {
       subtotal += totalItemPrice;
       li.innerHTML = `<span>${p.name} x ${p.qty}</span><span>$${totalItemPrice.toFixed(2)}</span>`;
     } else {
-      // Empty slot styling (could be more subtle or use a placeholder class)
-      li.innerHTML = `<span style="color:#aaa;">${translations[currentLang].emptyItem}</span><span></span>`;
+      li.innerHTML = `<span>${translations[currentLang].emptyItem}</span><span></span>`; // Use translated empty item
     }
     orderList.appendChild(li);
   }
@@ -109,16 +124,10 @@ function updateSummary() {
   totalEl.textContent = totalAmount.toFixed(2);
 }
 
-// Carousel Scrolling
-function scrollCarousel(direction) {
-  const scrollAmount = productGrid.clientWidth * 0.8; // Scroll by 80% of visible width
-  productGrid.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-}
-
-// Modal Functions
+// Modal Functions (openModal, closeModal remain the same)
 function openModal(imageSrc) {
   modalImage.src = imageSrc;
-  modalOverlay.classList.add('active'); // Use class to trigger CSS opacity transition
+  modalOverlay.classList.add('active');
 }
 
 function closeModal() {
@@ -131,8 +140,8 @@ function toggleLang() {
   const langBtn = document.getElementById('langBtn');
   langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN';
   applyTranslations();
-  renderProducts(); // Re-render products in case names/labels need translation (not in this data set, but good practice)
-  updateSummary(); // Re-render summary for "(empty)" text
+  renderCurrentProductView();
+  // updateSummary(); // updateSummary is called by renderCurrentProductView
 }
 
 function applyTranslations() {
@@ -142,14 +151,15 @@ function applyTranslations() {
   document.getElementById('subtotalLabel').textContent = translations[currentLang].subtotalLabel;
   document.getElementById('vatLabel').textContent = translations[currentLang].vatLabel;
   document.getElementById('totalLabel').textContent = translations[currentLang].totalLabel;
-  // Note: Product names and descriptions themselves are not translated in this example
-  // but if they were, renderProducts() would need to handle that.
+  // If product names/descriptions were translatable, they would be updated in renderCurrentProductView
+  // via its call in toggleLang().
+  // Also update the emptyItem text in the summary by calling updateSummary directly if it's not covered
+  // Forcing re-render of summary items.
+  updateSummary();
 }
 
-// Submit Order
+// Submit Order (submitOrder remains the same)
 function submitOrder() {
-  // In a real app, this would send data to a server.
-  // For now, just an alert, using translated text.
   const orderData = products.filter(p => p.qty > 0);
   if (orderData.length === 0) {
     alert(currentLang === 'en' ? 'Your order is empty.' : 'Tu pedido está vacío.');
@@ -157,10 +167,6 @@ function submitOrder() {
   }
   console.log("Order submitted:", orderData);
   alert(translations[currentLang].orderAlert);
-  // Optionally, reset quantities after submission
-  // products.forEach(p => p.qty = 0);
-  // renderProducts();
-  // updateSummary();
 }
 
 // Event Listeners
@@ -170,9 +176,26 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// Event listeners for single view quantity buttons
+// These need to be after the DOM elements are declared.
+// If script is in <head>, wrap in DOMContentLoaded or ensure buttons exist.
+// Assuming buttons exist as per HTML structure.
+if (singleViewAddBtn && singleViewRemoveBtn) {
+    singleViewAddBtn.addEventListener('click', () => updateQty(1));
+    singleViewRemoveBtn.addEventListener('click', () => updateQty(-1));
+}
+
+
 // Initial Render
 document.addEventListener('DOMContentLoaded', () => {
-  applyTranslations(); // Apply initial language
-  renderProducts();
-  // updateSummary(); // updateSummary is called by renderProducts
+  applyTranslations();
+  renderCurrentProductView();
+  // updateSummary(); // updateSummary is called by renderCurrentProductView
+
+  // Re-assign event listeners inside DOMContentLoaded if elements might not be ready globally
+  // This is a robust way, though for this specific setup, it might be redundant if script is at body end.
+  if (!singleViewAddBtn.onclick) { // Check if listeners were already attached (e.g. if script ran twice)
+    singleViewAddBtn.addEventListener('click', () => updateQty(1));
+    singleViewRemoveBtn.addEventListener('click', () => updateQty(-1));
+  }
 });

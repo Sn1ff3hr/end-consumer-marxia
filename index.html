@@ -13,12 +13,19 @@
     <div class="lang-switch" onclick="toggleLang()" id="langBtn">ES</div>
   </div>
 
-  <div class="carousel-container">
-    <button class="arrow arrow-left" onclick="scrollCarousel(-1)">&lt;</button>
-    <div class="product-grid" id="productGrid">
-      <!-- Product cards will be injected here by JavaScript -->
+  <div class="product-viewer"> <!-- Was carousel-container -->
+    <button class="arrow arrow-left" onclick="navigateProduct(-1)">&lt;</button> <!-- Assuming new JS function navigateProduct -->
+    <div class="single-product-display">
+      <img id="currentProductImg" src="" alt="Current Product" onclick="openModal(this.src)" />
+      <h3 id="currentProductName">Product Name</h3>
+      <p id="currentProductPrice">$0.00</p>
+      <div class="product-controls">
+        <button class="btn-remove" id="singleViewRemoveBtn" aria-label="Remove one">-</button>
+        <span class="product-qty-display" id="singleViewProductQty">0</span>
+        <button class="btn-add" id="singleViewAddBtn" aria-label="Add one">+</button>
+      </div>
     </div>
-    <button class="arrow arrow-right" onclick="scrollCarousel(1)">&gt;</button>
+    <button class="arrow arrow-right" onclick="navigateProduct(1)">&gt;</button> <!-- Assuming new JS function navigateProduct -->
   </div>
 
   <div class="order-summary" id="orderSummarySection">
