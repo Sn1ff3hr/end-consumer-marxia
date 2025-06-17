@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visual Order UI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="product-viewer">
+      <button class="nav-btn" id="prevBtn">←</button>
+      <div class="product-card" id="productCard">
+        <img id="productImg" src="" alt="" />
+        <h3 id="productName"></h3>
+        <p id="productPrice"></p>
+        <div class="qty-controls">
+          <button onclick="updateQty(-1)">-</button>
+          <span id="productQty">0</span>
+          <button onclick="updateQty(1)">+</button>
+        </div>
+      </div>
+      <button class="nav-btn" id="nextBtn">→</button>
+    </div>
+
+    <div class="order-summary">
+      <h3>Items</h3>
+      <ul id="itemList"></ul>
+      <div class="total">
+        <p>Subtotal: $<span id="subtotal">0.00</span></p>
+        <p>VAT (12%): $<span id="vat">0.00</span></p>
+        <p><strong>Total: $<span id="total">0.00</span></strong></p>
+      </div>
+      <button class="pay-btn" onclick="payNow()">PAY</button>
+      <!-- Embed your payment platform script here -->
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
