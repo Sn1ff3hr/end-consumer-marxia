@@ -16,6 +16,8 @@
   <div class="product-viewer"> <!-- Was carousel-container -->
     <button class="arrow arrow-left" onclick="navigateProduct(-1)">&lt;</button> <!-- Assuming new JS function navigateProduct -->
     <div class="single-product-display">
+
+      <div id="productImagePlaceholder" class="product-image-placeholder" style="display:none;">No Image Available</div> <!-- Added -->
       <img id="currentProductImg" src="" alt="Current Product" onclick="openModal(this.src)" />
       <h3 id="currentProductName">Product Name</h3>
       <p id="currentProductPrice">$0.00</p>
@@ -41,10 +43,17 @@
         <p><span class="total-label" id="subtotalLabel">Subtotal</span>: $<span id="subtotal">0.00</span></p>
         <p><span class="total-label" id="vatLabel">VAT</span>: $<span id="vat">0.00</span></p>
         <p><strong><span class="total-label" id="totalLabel">Total</span>: $<span id="total">0.00</span></strong></p>
+        <!-- Added delivery toggle below -->
+        <div class="delivery-option">
+          <span id="deliveryLabel">Includes Delivery</span>
+          <div class="toggle-switch" id="deliveryToggle">
+            <button class="toggle-btn yes active" id="deliveryYesBtn" aria-pressed="true">Yes</button>
+            <button class="toggle-btn no" id="deliveryNoBtn" aria-pressed="false">No</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
   <button class="btn btn-pay" onclick="submitOrder()" id="submitBtn">PAY</button>
 </div>
 
