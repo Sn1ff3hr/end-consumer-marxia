@@ -3,38 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visual Order UI</title>
+  <title>Modern Order App</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="product-viewer">
-      <button class="nav-btn" id="prevBtn">←</button>
-      <div class="product-card" id="productCard">
-        <img id="productImg" src="" alt="" />
-        <h3 id="productName"></h3>
-        <p id="productPrice"></p>
-        <div class="qty-controls">
-          <button onclick="updateQty(-1)">-</button>
-          <span id="productQty">0</span>
-          <button onclick="updateQty(1)">+</button>
+<div class="container">
+  <div class="header">
+    <h2 id="appTitle">Order App</h2>
+    <div class="lang-switch" onclick="toggleLang()" id="langBtn">ES</div>
+  </div>
+
+  <div class="product-viewer"> <!-- Was carousel-container -->
+    <button class="arrow arrow-left" onclick="navigateProduct(-1)">&lt;</button> <!-- Assuming new JS function navigateProduct -->
+    <div class="single-product-display">
+      <div id="productImagePlaceholder" class="product-image-placeholder" style="display:none;">No Image Available</div> <!-- Added -->
+      <img id="currentProductImg" src="" alt="Current Product" onclick="openModal(this.src)" />
+      <h3 id="currentProductName">Product Name</h3>
+      <p id="currentProductPrice">$0.00</p>
+      <div class="product-controls">
+        <button class="btn-remove" id="singleViewRemoveBtn" aria-label="Remove one">-</button>
+        <span class="product-qty-display" id="singleViewProductQty">0</span>
+        <button class="btn-add" id="singleViewAddBtn" aria-label="Add one">+</button>
+      </div>
+    </div>
+    <button class="arrow arrow-right" onclick="navigateProduct(1)">&gt;</button> <!-- Assuming new JS function navigateProduct -->
+  </div>
+
+  <div class="order-summary" id="orderSummarySection">
+    <h3 id="summaryTitle">Order Items</h3> <!-- Text changed -->
+
+    <ul id="orderList" class="order-items">
+      <!-- Order items will be populated here -->
+    </ul>
+
+    <div class="totals-container"> <!-- New container for totals -->
+      <h3 id="totalsHeading">TOTALS</h3> <!-- New heading -->
+      <div class="order-totals"> <!-- Existing totals content, now nested -->
+        <p><span class="total-label" id="subtotalLabel">Subtotal</span>: $<span id="subtotal">0.00</span></p>
+        <p><span class="total-label" id="vatLabel">VAT</span>: $<span id="vat">0.00</span></p>
+        <p><strong><span class="total-label" id="totalLabel">Total</span>: $<span id="total">0.00</span></strong></p>
+        <!-- Added delivery toggle below -->
+        <div class="delivery-option">
+          <span id="deliveryLabel">Includes Delivery</span>
+          <div class="toggle-switch" id="deliveryToggle">
+            <button class="toggle-btn yes active" id="deliveryYesBtn" aria-pressed="true">Yes</button>
+            <button class="toggle-btn no" id="deliveryNoBtn" aria-pressed="false">No</button>
+          </div>
         </div>
       </div>
-      <button class="nav-btn" id="nextBtn">→</button>
-    </div>
-
-    <div class="order-summary">
-      <h3>Items</h3>
-      <ul id="itemList"></ul>
-      <div class="total">
-        <p>Subtotal: $<span id="subtotal">0.00</span></p>
-        <p>VAT (12%): $<span id="vat">0.00</span></p>
-        <p><strong>Total: $<span id="total">0.00</span></strong></p>
-      </div>
-      <button class="pay-btn" onclick="payNow()">PAY</button>
-      <!-- Embed your payment platform script here -->
     </div>
   </div>
-  <script src="script.js"></script>
+
+  <button class="btn btn-pay" onclick="submitOrder()" id="submitBtn">PAY</button>
+</div>
+
+<!-- Zoom Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation();">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <img id="modalImage" src="" alt="Zoomed product" />
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
