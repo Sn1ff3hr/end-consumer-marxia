@@ -29,7 +29,7 @@ const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
 const translations = {
   en: {
     appTitle: 'Order App',
-    summaryTitle: 'Order List',
+    summaryTitle: 'Order Items',
     payButton: 'PAY',
     subtotalLabel: 'Subtotal',
     vatLabel: 'VAT',
@@ -40,7 +40,7 @@ const translations = {
   },
   es: {
     appTitle: 'Aplicación de Pedido',
-    summaryTitle: 'Lista de Pedido',
+    summaryTitle: 'Artículos del Pedido',
     payButton: 'PAGAR',
     subtotalLabel: 'Subtotal',
     vatLabel: 'IVA',

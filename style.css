@@ -54,19 +54,15 @@ body {
   background-color: #00b89f; /* Darker accent */
 }
 
-/* Product Viewer (formerly Carousel) Styles */
-.product-viewer { /* Was .carousel-container */
-  position: relative; /* For arrow positioning */
+/* Product Viewer Styles */
+.product-viewer {
+  position: relative;
   margin-bottom: 1.5rem;
-  padding: 0 3rem; /* Add some padding so arrows aren't flush with container edges */
+  padding: 0 3rem;
   display: flex;
   align-items: center;
-  justify-content: center; /* Center the single product display */
+  justify-content: center;
 }
-
-/*
-  REMOVED .product-grid styles as it's no longer used for carousel display
-*/
 
 .arrow {
   position: absolute;
@@ -161,98 +157,93 @@ body {
   min-width: 25px;
 }
 
-/*
-  REMOVED .product-card styles as they are superseded by .single-product-display
-  or adapted into .single-product-display.
-  Also removed .product-card:hover effects.
-  The old .product-name and .product-price styles are also implicitly replaced
-  by those within .single-product-display for #currentProductName and #currentProductPrice.
-*/
-
-
-/* Order Summary Styles */
-.order-summary {
+/* Order Summary Section Styles */
+.order-summary { /* Styles the div with ID orderSummarySection */
   margin-top: 1.5rem;
-  background: #f9f9f9;
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.03);
-}
-
-#summaryTitle {
-  margin-top:0;
-  margin-bottom: 1rem;
-  color: var(--primary);
-  text-align: center;
-}
-
-.order-flex {
   display: flex;
-  justify-content: space-between;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: stretch; /* Children will define their own width/max-width and center with margin:auto */
+  gap: 1.5rem; /* Space between order items block and totals block */
 }
 
-.order-items {
-  flex: 1;
-  min-width: 280px;
-  max-height: 180px;
+#summaryTitle { /* Heading for Order Items list */
+  text-align: center;
+  color: var(--primary);
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem; /* Consistent with other main section titles if any */
+}
+
+.order-items { /* Styles ul#orderList */
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+
+  max-height: 220px; /* Slightly more height */
   overflow-y: auto;
+  background: var(--surface); /* Card background */
+  padding: 1.25rem; /* Adjusted padding */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   border: 1px solid #e0e0e0;
-  background: #ffffff;
-  padding: 0.75rem;
-  border-radius: calc(var(--radius) - 0.2em);
   list-style: none;
-  margin: 0;
+  margin: 0; /* Remove default ul margin */
 }
-.order-items::-webkit-scrollbar {
-  width: 8px;
-}
-.order-items::-webkit-scrollbar-thumb {
-  background-color: var(--accent);
-  border-radius: 4px;
-}
-.order-items::-webkit-scrollbar-track {
-  background-color: #f0f0f0;
-}
+.order-items::-webkit-scrollbar { width: 8px; }
+.order-items::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 4px; }
+.order-items::-webkit-scrollbar-track { background-color: #f0f0f0; }
 
 .order-items li {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.6rem;
-  padding-bottom: 0.6rem;
+  align-items: center; /* Vertically align items if text wraps */
+  margin-bottom: 0.75rem; /* Increased margin */
+  padding-bottom: 0.75rem; /* Increased padding */
   border-bottom: 1px dashed #eee;
-  font-size: 0.9rem;
+  font-size: 0.95rem; /* Slightly larger font */
 }
-.order-items li:last-child {
-  margin-bottom: 0;
-  border-bottom: none;
-}
-.order-items li span:last-child {
-  font-weight: bold;
+.order-items li:last-child { margin-bottom: 0; border-bottom: none; }
+.order-items li span:last-child { font-weight: bold; white-space: nowrap; } /* Prevent price from wrapping */
+.order-items li span:first-child { flex-grow: 1; padding-right: 0.5rem; } /* Allow item name to take space */
+/* Ensure empty item styling from JS (using &nbsp;) works visually */
+.order-items li span:empty { display: inline-block; min-height: 1em; } /* Helps maintain height for &nbsp; */
+
+
+.totals-container {
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+
+  background: var(--surface); /* Card background */
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid #e0e0e0;
 }
 
-.order-totals {
-  flex-basis: 280px;
-  flex-grow: 1;
-  background: #eef2f7;
-  border-radius: calc(var(--radius) - 0.2em);
-  padding: 1rem;
-  box-shadow: 0 0 5px rgba(0,0,0,0.05);
+#totalsHeading { /* Heading for TOTALS block */
+  text-align: center;
+  color: var(--primary);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.4rem; /* Consistent styling */
+}
+
+.order-totals { /* This div is now INSIDE .totals-container */
+  border-radius: 0;
+  padding: 0;
 }
 .order-totals p {
   display: flex;
   justify-content: space-between;
-  margin: 0.6rem 0;
-  font-size: 0.95rem;
+  margin: 0.75rem 0; /* Slightly more margin */
+  font-size: 1rem; /* Slightly larger font */
 }
-.order-totals p strong {
-  font-size: 1.05rem;
-  color: var(--primary);
-}
-.total-label {
-  color: #555;
-}
+.order-totals p strong { font-size: 1.1rem; color: var(--primary); }
+.total-label { color: #555; font-weight: 500; }
+
 
 /* General Button Styles (like PAY button) */
 .btn {
@@ -342,75 +333,46 @@ body {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-  .order-flex {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .order-totals {
+  /* .order-flex removed */
+  .order-totals { /* Ensure this context is correct now */
     flex-basis: auto;
   }
-  /* Removed .product-card responsive styles */
   .header {
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
   }
-  #appTitle {
-    font-size: 1.5rem;
-  }
-  .lang-switch {
-    align-self: flex-end;
-  }
-  .product-viewer {
-    padding: 0 2rem; /* Less padding on smaller screens */
-  }
-  .single-product-display {
-    padding: 1rem;
-    max-width: 280px;
-  }
-  .single-product-display h3#currentProductName {
-    font-size: 1.1rem;
-  }
-  .single-product-display p#currentProductPrice {
-    font-size: 1rem;
-  }
-  .product-controls button {
-    width: 2.2rem;
-    height: 2.2rem;
-    font-size: 1.3rem;
-  }
-  .product-qty-display {
-    font-size: 0.9rem;
+  #appTitle { font-size: 1.5rem; }
+  .lang-switch { align-self: flex-end; }
+  .product-viewer { padding: 0 2rem; }
+  .single-product-display { padding: 1rem; max-width: 280px; }
+  .single-product-display h3#currentProductName { font-size: 1.1rem; }
+  .single-product-display p#currentProductPrice { font-size: 1rem; }
+  .product-controls button { width: 2.2rem; height: 2.2rem; font-size: 1.3rem; }
+  .product-qty-display { font-size: 0.9rem; }
+
+  .order-items, .totals-container {
+    max-width: 95%; /* Allow more width on tablets */
   }
 }
 
 @media (max-width: 480px) {
-  body {
-    padding: 0.5rem;
+  body { padding: 0.5rem; }
+  .container { padding: 1rem; }
+  .product-viewer { padding: 0 0.5rem; }
+  .arrow { font-size: 1.4rem; padding: 0.2rem 0.5rem; }
+  .single-product-display { max-width: calc(100% - 4rem); } /* Arrows space */
+  .single-product-display img#currentProductImg { height: 160px; }
+  .modal-close { width: 30px; height: 30px; font-size: 1.2rem; line-height: 28px; top: -10px; right: -10px; }
+
+  #summaryTitle, #totalsHeading {
+    font-size: 1.2rem; /* Smaller headings */
   }
-  .container {
-    padding: 1rem;
+  .order-items, .totals-container {
+    padding: 0.75rem; /* Reduce padding */
+    max-width: 100%; /* Full width on very small screens */
   }
-  /* Removed .product-card responsive styles */
-  .product-viewer {
-    padding: 0 0.5rem; /* Minimal padding for arrows to be near edges */
-  }
-  .arrow {
-    font-size: 1.4rem;
-    padding: 0.2rem 0.5rem;
-  }
-  .single-product-display {
-    max-width: calc(100% - 4rem); /* Ensure arrows don't overlap content too much */
-  }
-  .single-product-display img#currentProductImg {
-    height: 160px;
-  }
-  .modal-close {
-    width: 30px;
-    height: 30px;
-    font-size: 1.2rem;
-    line-height: 28px;
-    top: -10px;
-    right: -10px;
-  }
+   .order-items li { font-size: 0.9rem; margin-bottom: 0.5rem; padding-bottom: 0.5rem; }
+   .order-totals p { font-size: 0.9rem; margin: 0.5rem 0; }
+   .order-totals p strong { font-size: 1rem; }
 }
