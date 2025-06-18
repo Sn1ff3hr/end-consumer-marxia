@@ -1,0 +1,24 @@
+{
+  "name": "Modern Order Application",
+  "short_name": "OrderApp",
+  "description": "An application to order modern products easily.",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#5028e0",
+  "orientation": "portrait-primary"
+}
