@@ -16,6 +16,7 @@
   <div class="product-viewer"> <!-- Was carousel-container -->
     <button class="arrow arrow-left" onclick="navigateProduct(-1)">&lt;</button> <!-- Assuming new JS function navigateProduct -->
     <div class="single-product-display">
+
       <div id="productImagePlaceholder" class="product-image-placeholder" style="display:none;">No Image Available</div> <!-- Added -->
       <img id="currentProductImg" src="" alt="Current Product" onclick="openModal(this.src)" />
       <h3 id="currentProductName">Product Name</h3>
@@ -53,7 +54,6 @@
       </div>
     </div>
   </div>
-
   <button class="btn btn-pay" onclick="submitOrder()" id="submitBtn">PAY</button>
 </div>
 

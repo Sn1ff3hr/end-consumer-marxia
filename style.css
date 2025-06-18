@@ -95,12 +95,14 @@ body {
   z-index: 10;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
 }
 .arrow:hover {
   background: var(--primary);
   color: white;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
+
 .arrow-left { left: 0.5rem; }
 .arrow-right { right: 0.5rem; }
 
@@ -162,6 +164,7 @@ body {
 }
 .product-controls button:active {
   transform: scale(0.9);
+
 }
 
 .btn-add { background: var(--primary); color: white; }
@@ -225,7 +228,6 @@ body {
 .order-items li span:last-child { font-weight: bold; white-space: nowrap; }
 .order-items li span:first-child { flex-grow: 1; padding-right: 0.5rem; }
 .order-items li span:empty { display: inline-block; min-height: 1em; }
-
 
 .totals-container {
   width: 100%;
@@ -404,6 +406,7 @@ body {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+<
   .order-totals {
     flex-basis: auto;
   }
@@ -412,6 +415,7 @@ body {
     gap: 0.5rem;
     margin-bottom: 1rem;
   }
+
   #appTitle { font-size: 1.5rem; }
   .lang-switch { align-self: flex-end; }
   .product-viewer { padding: 0 2rem; }
@@ -420,6 +424,7 @@ body {
   .single-product-display p#currentProductPrice { font-size: 1rem; }
   .product-controls button { width: 2.2rem; height: 2.2rem; font-size: 1.3rem; }
   .product-qty-display { font-size: 0.9rem; }
+
 
   .order-items { /* max-width already 320px, totals-container is 600px */
      max-width: 95%; /* If 320px is too small on tablet */
@@ -449,6 +454,8 @@ body {
    .order-items li { font-size: 0.9rem; margin-bottom: 0.5rem; padding-bottom: 0.5rem; }
    .order-totals p { font-size: 0.9rem; margin: 0.5rem 0; }
    .order-totals p strong { font-size: 1rem; }
+
    .delivery-option { font-size: 0.85rem; }
    .toggle-btn { padding: 0.3em 0.7em; font-size: 0.8rem;}
+
 }

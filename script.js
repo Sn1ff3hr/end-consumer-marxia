@@ -1,14 +1,12 @@
-// Product Data (adapted from original script.js)
+// Product Data
 const products = [
   { id: 'p1', name: 'Liquid Glass Mug', price: 15.99, qty: 0, img: 'https://via.placeholder.com/300x200?text=Glass+Mug' },
   { id: 'p2', name: 'Neumorphic Lamp', price: 34.50, qty: 0, img: 'https://via.placeholder.com/300x200?text=Lamp' },
-  { id: 'p3', name: 'AR Book Viewer', price: 9.99, qty: 0, img: '' }, // Example of item with no image
+  { id: 'p3', name: 'AR Book Viewer', price: 9.99, qty: 0, img: '' },
   { id: 'p4', name: 'Ergo Mouse Pad', price: 12.00, qty: 0, img: 'https://via.placeholder.com/300x200?text=Mouse+Pad' },
   { id: 'p5', name: 'Ambient LED Strip', price: 22.75, qty: 0, img: 'https://via.placeholder.com/300x200?text=LED+Strip' },
 ];
-
 let currentIndex = 0;
-// let includesDelivery = true; // Optional: To store delivery state
 
 // DOM Elements
 const orderList = document.getElementById('orderList');
@@ -20,7 +18,7 @@ const modalImage = document.getElementById('modalImage');
 
 // Single Product View DOM Elements
 const currentProductImgEl = document.getElementById('currentProductImg');
-const productImagePlaceholderEl = document.getElementById('productImagePlaceholder'); // Added
+const productImagePlaceholderEl = document.getElementById('productImagePlaceholder');
 const currentProductNameEl = document.getElementById('currentProductName');
 const currentProductPriceEl = document.getElementById('currentProductPrice');
 const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
@@ -31,7 +29,7 @@ const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
 const deliveryYesBtn = document.getElementById('deliveryYesBtn');
 const deliveryNoBtn = document.getElementById('deliveryNoBtn');
 
-// Language specific text
+// Language Strings
 const translations = {
   en: {
     appTitle: 'Order App',
@@ -43,7 +41,7 @@ const translations = {
     emptyItem: '&nbsp;',
     qtyLabel: 'Qty',
     orderAlert: '✅ Order submitted (simulated). Thank you!',
-    deliveryLabel: "Includes Delivery", // Added
+    deliveryLabel: "Includes Delivery",
   },
   es: {
     appTitle: 'Aplicación de Pedido',
@@ -55,12 +53,12 @@ const translations = {
     emptyItem: '&nbsp;',
     qtyLabel: 'Cant',
     orderAlert: '✅ Pedido enviado (simulado). ¡Gracias!',
-    deliveryLabel: "Incluye Envío", // Added
+    deliveryLabel: "Incluye Envío",
   }
 };
 let currentLang = 'en';
 
-// Render Current Product in Single View
+// Product Renderer
 function renderCurrentProductView() {
   if (products.length === 0) {
     currentProductImgEl.style.display = 'none';
@@ -74,8 +72,8 @@ function renderCurrentProductView() {
     updateSummary();
     return;
   }
-  const product = products[currentIndex];
 
+  const product = products[currentIndex];
   if (product.img && product.img.trim() !== '') {
     currentProductImgEl.src = product.img;
     currentProductImgEl.alt = product.name;
@@ -90,21 +88,19 @@ function renderCurrentProductView() {
   currentProductNameEl.textContent = product.name;
   currentProductPriceEl.textContent = `$${product.price.toFixed(2)}`;
   singleViewProductQtyEl.textContent = product.qty;
-
   singleViewAddBtn.setAttribute('aria-label', `Add one ${product.name}`);
   singleViewRemoveBtn.setAttribute('aria-label', `Remove one ${product.name}`);
-
   updateSummary();
 }
 
-// Navigate Products (for arrow buttons)
+// Navigation
 function navigateProduct(direction) {
   if (products.length === 0) return;
   currentIndex = (currentIndex + direction + products.length) % products.length;
   renderCurrentProductView();
 }
 
-// Update Product Quantity
+// Quantity Updater
 function updateQty(change) {
   if (products.length === 0) return;
   products[currentIndex].qty = Math.max(0, products[currentIndex].qty + change);
@@ -112,14 +108,12 @@ function updateQty(change) {
   updateSummary();
 }
 
-// Update Order Summary
+// Summary Renderer
 function updateSummary() {
   orderList.innerHTML = '';
   let subtotal = 0;
   const vatRate = 0.12;
-
   const activeProducts = products.filter(p => p.qty > 0);
-
   for (let i = 0; i < 5; i++) {
     const li = document.createElement('li');
     if (activeProducts[i]) {
@@ -132,7 +126,6 @@ function updateSummary() {
     }
     orderList.appendChild(li);
   }
-
   const vatAmount = subtotal * vatRate;
   const totalAmount = subtotal + vatAmount;
 
@@ -141,17 +134,15 @@ function updateSummary() {
   totalEl.textContent = totalAmount.toFixed(2);
 }
 
-// Modal Functions
+// Modal Viewer
 function openModal(imageSrc) {
-  if (!imageSrc || imageSrc.endsWith('No%20Image%20Available')) { // Check if src is empty or placeholder text
-        // Optionally, provide feedback that there's no image to zoom, or do nothing
-        console.log("No image to zoom or placeholder is shown.");
-        return;
+  if (!imageSrc || imageSrc.endsWith('No%20Image%20Available')) {
+    console.log("No image to zoom or placeholder is shown.");
+    return;
   }
   modalImage.src = imageSrc;
   modalOverlay.classList.add('active');
 }
-
 function closeModal() {
   modalOverlay.classList.remove('active');
 }
@@ -165,6 +156,7 @@ function toggleLang() {
   renderCurrentProductView();
 }
 
+// Text/Label Translator
 function applyTranslations() {
   document.getElementById('appTitle').textContent = translations[currentLang].appTitle;
   document.getElementById('summaryTitle').textContent = translations[currentLang].summaryTitle;
@@ -172,7 +164,7 @@ function applyTranslations() {
   document.getElementById('subtotalLabel').textContent = translations[currentLang].subtotalLabel;
   document.getElementById('vatLabel').textContent = translations[currentLang].vatLabel;
   document.getElementById('totalLabel').textContent = translations[currentLang].totalLabel;
-  document.getElementById('deliveryLabel').textContent = translations[currentLang].deliveryLabel; // Added
+  document.getElementById('deliveryLabel').textContent = translations[currentLang].deliveryLabel;
   updateSummary();
 }
 
@@ -187,19 +179,18 @@ function submitOrder() {
   alert(translations[currentLang].orderAlert);
 }
 
-// Event Listeners
+// Key Events
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
     closeModal();
   }
 });
 
-// Initial Render & Event Listener Setup
+// DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Ensure DOM elements are available before attaching listeners or calling functions that use them.
   if (singleViewAddBtn && singleViewRemoveBtn) {
-      singleViewAddBtn.addEventListener('click', () => updateQty(1));
-      singleViewRemoveBtn.addEventListener('click', () => updateQty(-1));
+    singleViewAddBtn.addEventListener('click', () => updateQty(1));
+    singleViewRemoveBtn.addEventListener('click', () => updateQty(-1));
   }
 
   if (deliveryYesBtn && deliveryNoBtn) {
@@ -209,8 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
         deliveryYesBtn.setAttribute('aria-pressed', 'true');
         deliveryNoBtn.classList.remove('active');
         deliveryNoBtn.setAttribute('aria-pressed', 'false');
-        // includesDelivery = true;
-        // console.log("Delivery preference: Yes");
       }
     });
 
@@ -220,8 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
         deliveryNoBtn.setAttribute('aria-pressed', 'true');
         deliveryYesBtn.classList.remove('active');
         deliveryYesBtn.setAttribute('aria-pressed', 'false');
-        // includesDelivery = false;
-        // console.log("Delivery preference: No");
       }
     });
   }
