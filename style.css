@@ -183,7 +183,7 @@ body {
   margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center; /* Changed from stretch */
   gap: 1.5rem;
 }
 
@@ -231,14 +231,12 @@ body {
 
 .totals-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 500px; /* Changed from 600px */
   margin-left: auto;
   margin-right: auto;
 
   background: var(--surface);
-  padding: 1.5rem;
-  padding-left: 10px; /* Adjusted */
-  padding-right: 10px; /* Adjusted */
+  padding: 1rem; /* Changed from 1.5rem and consolidated padding */
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   border: 1px solid #e0e0e0;
@@ -257,11 +255,9 @@ body {
   padding: 0;
 }
 .order-totals p {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.7rem 0; /* Adjusted */
-  font-size: 0.95rem; /* Adjusted */
+  /* Flex properties removed as content is now in .totals-line */
+  margin: 0.7rem 0; /* Kept for potential other p tags */
+  font-size: 0.95rem; /* Kept for potential other p tags */
 }
 .order-totals p span:last-child:not(.total-label) {
     min-width: 60px;
@@ -269,6 +265,25 @@ body {
 }
 .order-totals p strong { font-size: 1.1rem; color: var(--primary); }
 .total-label { color: #555; font-weight: 500; }
+
+/* New styles for .totals-line */
+.totals-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Ensure it takes full width of its parent */
+  margin-bottom: 0.7rem; /* Add some space below it before the delivery option */
+}
+
+.totals-line > span span:last-child:not(.total-label) {
+    min-width: 60px; /* Preserve this from original styling */
+    display: inline-block; /* Ensure min-width is respected */
+}
+
+.totals-line > span strong {
+    font-size: 1.1rem; /* From original .order-totals p strong */
+    color: var(--primary); /* From original .order-totals p strong */
+}
 
 .delivery-option {
   display: flex;

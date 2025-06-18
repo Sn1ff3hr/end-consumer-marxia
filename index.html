@@ -40,9 +40,11 @@
     <div class="totals-container"> <!-- New container for totals -->
       <h3 id="totalsHeading">TOTALS</h3> <!-- New heading -->
       <div class="order-totals"> <!-- Existing totals content, now nested -->
-        <p><span class="total-label" id="subtotalLabel">Subtotal</span>: $<span id="subtotal">0.00</span></p>
-        <p><span class="total-label" id="vatLabel">VAT</span>: $<span id="vat">0.00</span></p>
-        <p><strong><span class="total-label" id="totalLabel">Total</span>: $<span id="total">0.00</span></strong></p>
+        <div class="totals-line">
+          <span><span class="total-label" id="subtotalLabel">Subtotal</span>: $<span id="subtotal">0.00</span></span>
+          <span><span class="total-label" id="vatLabel">VAT</span>: $<span id="vat">0.00</span></span>
+          <span><strong><span class="total-label" id="totalLabel">Total</span>: $<span id="total">0.00</span></strong></span>
+        </div>
         <!-- Added delivery toggle below -->
         <div class="delivery-option">
           <span id="deliveryLabel">Includes Delivery</span>
