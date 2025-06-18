@@ -74,7 +74,7 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #f0f0f0;
-  color: #777;
+  color: #444;
   border-radius: calc(var(--radius) - 0.4em);
   margin-bottom: 1rem; /* Match image's margin-bottom */
   font-size: 0.9rem;
@@ -308,7 +308,7 @@ body {
   border: none;
   cursor: pointer;
   background-color: #f0f0f0;
-  color: #555;
+  color: #333;
   font-size: 0.85rem;
   line-height: 1.2;
   transition: background-color 0.2s ease, color 0.2s ease;
