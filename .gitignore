@@ -1,0 +1,19 @@
+# Node.js dependencies
+node_modules/
+
+# Build outputs
+/dist/
+/build/
+
+# System files
+.DS_Store
+
+# Environment files
+.env
+
+# Local coverage reports
+coverage/
+
+# Logs
+*.log
+
