@@ -35,3 +35,8 @@ These headers help reduce common web vulnerabilities when the app is deployed.
 - Review `manifest.json` to customise icons, name and theme colours for your brand.
 - Modify the list in `sw.js` if you add new files that should be cached for offline use.
 
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
