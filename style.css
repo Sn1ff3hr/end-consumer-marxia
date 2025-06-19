@@ -61,7 +61,7 @@ body {
 .product-viewer {
   position: relative;
   margin-bottom: 1.5rem;
-  padding: 0 3rem;
+  padding: 0 1.5rem; /* Changed from 0 3rem */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,7 +115,7 @@ body {
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   width: 100%;
-  max-width: 320px;
+  max-width: 320px; /* Base max-width, overridden in media queries */
   margin: 0 auto;
 }
 
@@ -197,7 +197,7 @@ body {
 
 .order-items { /* Styles ul#orderList */
   width: 100%;
-  max-width: 320px; /* Reduced width */
+  max-width: 400px; /* Changed from 320px */
   margin-left: auto;
   margin-right: auto;
 
@@ -226,7 +226,13 @@ body {
 }
 .order-items li:last-child { margin-bottom: 0; border-bottom: none; }
 .order-items li span:last-child { font-weight: bold; white-space: nowrap; }
-.order-items li span:first-child { flex-grow: 1; padding-right: 0.5rem; }
+.order-items li span:first-child {
+  flex-grow: 1;
+  padding-right: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .order-items li span:empty { display: inline-block; min-height: 1em; }
 
 .totals-container {
@@ -419,6 +425,14 @@ body {
   transform: rotate(90deg);
 }
 
+#cookieConsentBanner {
+  /* Styles for the cookie consent banner to prevent obscuring content */
+  height: auto;
+  max-height: 25vh; /* Reasonable max height */
+  overflow-y: auto; /* Allow scroll if content overflows */
+  /* Consider adding other necessary base styles: position, background, padding, z-index etc. */
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .order-totals {
@@ -432,11 +446,11 @@ body {
 
   #appTitle { font-size: 1.5rem; }
   .lang-switch { align-self: flex-end; }
-  .product-viewer { padding: 0 2rem; }
+  .product-viewer { padding: 0 1rem; } /* Changed from 0 2rem */
   .single-product-display { padding: 1rem; max-width: 280px; }
   .single-product-display h3#currentProductName { font-size: 1.1rem; }
   .single-product-display p#currentProductPrice { font-size: 1rem; }
-  .product-controls button { width: 2.2rem; height: 2.2rem; font-size: 1.3rem; }
+  .product-controls button { width: 2.4rem; height: 2.4rem; font-size: 1.4rem; } /* Increased tappability */
   .product-qty-display { font-size: 0.9rem; }
 
 
@@ -453,10 +467,16 @@ body {
   .container { padding: 1rem; min-height: calc(100vh - 1rem); } /* Adjust for body padding */
   .product-viewer { padding: 0 0.5rem; }
   .arrow { font-size: 1.4rem; padding: 0.2rem 0.5rem; }
-  .single-product-display { max-width: calc(100% - 4rem); }
+  .single-product-display { max-width: 90%; } /* Changed from calc(100% - 4rem) */
   .single-product-display img#currentProductImg { height: 160px; }
   #productImagePlaceholder { height: 160px; }
   .modal-close { width: 30px; height: 30px; font-size: 1.2rem; line-height: 28px; top: -10px; right: -10px; }
+
+  .product-controls button {
+    width: 2.3rem; /* Adjusted for 480px */
+    height: 2.3rem; /* Adjusted for 480px */
+    font-size: 1.3rem; /* Adjusted for 480px */
+  }
 
   #summaryTitle, #totalsHeading {
     font-size: 1.2rem;
@@ -469,8 +489,14 @@ body {
    .order-totals p { font-size: 0.9rem; margin: 0.5rem 0; }
    .order-totals p strong { font-size: 1rem; }
 
+   .totals-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+   }
+
    .delivery-option { font-size: 0.85rem; }
-   .toggle-btn { padding: 0.3em 0.7em; font-size: 0.8rem;}
+   .toggle-btn { padding: 0.5em 0.7em; font-size: 0.8rem;} /* Increased tappability */
 
 }
 
