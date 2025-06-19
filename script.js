@@ -72,9 +72,10 @@ function renderCurrentProductView() {
   const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
 
   if (products.length === 0) {
-    if (currentProductImgEl) currentProductImgEl.style.display = 'none';
+    if (currentProductImgEl) currentProductImgEl.classList.add('hidden'); // Use class to hide
     if (productImagePlaceholderEl) {
-      productImagePlaceholderEl.style.display = 'flex';
+      productImagePlaceholderEl.classList.remove('hidden'); // Use class to show
+      productImagePlaceholderEl.style.display = 'flex'; // Keep flex behavior
       productImagePlaceholderEl.textContent = translations[currentLang].noProductsLoaded;
     }
     if (currentProductNameEl) currentProductNameEl.textContent = 'N/A';
@@ -91,13 +92,15 @@ function renderCurrentProductView() {
     if (currentProductImgEl) {
       currentProductImgEl.src = product.img;
       currentProductImgEl.alt = product.name;
-      currentProductImgEl.style.display = 'block';
+      currentProductImgEl.classList.remove('hidden'); // Use class to show
+      currentProductImgEl.style.display = 'block'; // Keep block behavior
     }
-    if (productImagePlaceholderEl) productImagePlaceholderEl.style.display = 'none';
+    if (productImagePlaceholderEl) productImagePlaceholderEl.classList.add('hidden'); // Use class to hide
   } else {
-    if (currentProductImgEl) currentProductImgEl.style.display = 'none';
+    if (currentProductImgEl) currentProductImgEl.classList.add('hidden'); // Use class to hide
     if (productImagePlaceholderEl) {
-      productImagePlaceholderEl.style.display = 'flex';
+      productImagePlaceholderEl.classList.remove('hidden'); // Use class to show
+      productImagePlaceholderEl.style.display = 'flex'; // Keep flex behavior
       productImagePlaceholderEl.textContent = translations[currentLang].noImageAvailable;
     }
   }
@@ -292,10 +295,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const arrowRightBtnLocal = document.querySelector('.arrow.arrow-right');
 
   // Critical elements check
-  if (!singleViewAddBtn || !orderList || !langBtn || !payBtn || !arrowLeftBtnLocal || !arrowRightBtnLocal) {
+  // Added currentProductImgEl, modalOverlay to critical check for robustness from previous step, productImagePlaceholderEl for new logic
+  if (!singleViewAddBtn || !orderList || !langBtn || !payBtn || !arrowLeftBtnLocal || !arrowRightBtnLocal || !currentProductImgEl || !modalOverlay || !productImagePlaceholderEl) {
     console.error("Critical DOM elements missing after DOMContentLoaded. Functionality impaired.");
     return;
   }
+
+  // Initial visibility setup
+  if (productImagePlaceholderEl) productImagePlaceholderEl.classList.add('hidden');
+
 
   // Initial language setup
   document.documentElement.lang = currentLang;
@@ -375,14 +383,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const cookieConsentBanner = document.getElementById('cookieConsentBanner');
   const acceptCookieConsentBtn = document.getElementById('acceptCookieConsent');
 
-  if (!localStorage.getItem('cookieConsentAccepted')) {
-    if (cookieConsentBanner) cookieConsentBanner.style.display = 'block';
+  if (cookieConsentBanner) { // Ensure banner exists before trying to modify it
+    cookieConsentBanner.classList.add('hidden'); // Initially hide
+    if (!localStorage.getItem('cookieConsentAccepted')) {
+      cookieConsentBanner.classList.remove('hidden'); // Show if not accepted
+    }
   }
 
   if (acceptCookieConsentBtn) {
     acceptCookieConsentBtn.addEventListener('click', () => {
       localStorage.setItem('cookieConsentAccepted', 'true');
-      if (cookieConsentBanner) cookieConsentBanner.style.display = 'none';
+      if (cookieConsentBanner) cookieConsentBanner.classList.add('hidden'); // Hide on accept
     });
   }
 
