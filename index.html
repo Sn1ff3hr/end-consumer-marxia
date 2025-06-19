@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Order modern products with our easy-to-use application. Customize your order and see totals in real-time.">
   <meta name="robots" content="index, follow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://via.placeholder.com data:; style-src 'self' 'unsafe-inline'; script-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://via.placeholder.com data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="X-Frame-Options" content="DENY">
   <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -16,12 +16,21 @@
   <link rel="alternate" hreflang="x-default" href="index.html">
   <title>Modern Order App</title>
   <link rel="stylesheet" href="style.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Modern Order App",
+    "description": "Order modern products with our easy-to-use application. Customize your order and see totals in real-time.",
+    "url": "YOUR_CANONICAL_URL_HERE"
+  }
+  </script>
 </head>
 <body>
 <main>
 <div class="container">
   <div class="header">
-    <h2 id="appTitle">Order App</h2>
+    <h1 id="appTitle">Order App</h1>
     <button class="lang-switch" id="langBtn" aria-label="Change language">ES</button>
   </div>
 
@@ -29,7 +38,7 @@
     <button class="arrow arrow-left">&lt;</button> <!-- Assuming new JS function navigateProduct -->
     <div class="single-product-display">
 
-      <div id="productImagePlaceholder" class="product-image-placeholder" style="display:none;">No Image Available</div> <!-- Added -->
+      <div id="productImagePlaceholder" class="product-image-placeholder">No Image Available</div> <!-- Added, style removed -->
       <img id="currentProductImg" src="" alt="Current Product" role="button" tabindex="0" aria-label="View larger image of current product" />
       <h3 id="currentProductName">Product Name</h3>
       <p id="currentProductPrice">$0.00</p>
@@ -82,20 +91,20 @@
 
   <footer class="site-footer">
     <p>
-      <a href="privacy-policy.html">Privacy Policy</a> |
-      <a href="cookie-policy.html">Cookie Policy</a>
+      <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> |
+      <a href="cookie-policy.html" target="_blank" rel="noopener noreferrer">Cookie Policy</a>
     </p>
   </footer>
 
   <script src="script.js"></script>
 
-<div id="cookieConsentBanner" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: white; padding: 15px; text-align: center; z-index: 1001;">
-  <p style="margin: 0 0 10px 0;">
+<div id="cookieConsentBanner">
+  <p>
     This website uses cookies to ensure you get the best experience.
-    <a href="/privacy-policy.html" target="_blank" style="color: #00d0b3; text-decoration: underline;">Privacy Policy</a> |
-    <a href="/cookie-policy.html" target="_blank" style="color: #00d0b3; text-decoration: underline;">Cookie Policy</a>
+    <a href="/privacy-policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> |
+    <a href="/cookie-policy.html" target="_blank" rel="noopener noreferrer">Cookie Policy</a>
   </p>
-  <button id="acceptCookieConsent" style="background: #00d0b3; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+  <button id="acceptCookieConsent">
     Accept
   </button>
 </div>

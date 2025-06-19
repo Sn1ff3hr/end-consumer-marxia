@@ -433,6 +433,50 @@ body {
   /* Consider adding other necessary base styles: position, background, padding, z-index etc. */
 }
 
+/* Utility class for hiding elements */
+.hidden {
+  display: none !important;
+}
+
+/* Styles for productImagePlaceholder - JS will toggle .hidden class */
+/* #productImagePlaceholder is already styled, JS will add/remove .hidden */
+
+/* Styles for #cookieConsentBanner and its children */
+#cookieConsentBanner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #333;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  z-index: 1001;
+  /* display: none; /* Initial state managed by JS adding .hidden */
+}
+#cookieConsentBanner p {
+  margin: 0 0 10px 0;
+}
+#cookieConsentBanner a {
+  color: #00d0b3;
+  text-decoration: underline;
+}
+#cookieConsentBanner a:hover { /* Added for completeness */
+  text-decoration: none;
+}
+button#acceptCookieConsent {
+  background: #00d0b3;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button#acceptCookieConsent:hover { /* Added for completeness */
+  background: #00b89f; /* Darker accent */
+}
+
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .order-totals {
