@@ -7,6 +7,8 @@ const ASSETS_TO_CACHE = [
   '/style.css',
   '/manifest.json',
   '/offline.html',
+  '/privacy-policy.html',
+  '/cookie-policy.html',
   // Add placeholder icon paths if they were actual files, e.g.:
   // '/icons/icon-192x192.png',
   // '/icons/icon-512x512.png',

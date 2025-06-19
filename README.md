@@ -34,6 +34,20 @@ These headers help reduce common web vulnerabilities when the app is deployed.
 - Ensure your server uses HTTPS in production so the Service Worker can run and to protect data in transit.
 - Review `manifest.json` to customise icons, name and theme colours for your brand.
 - Modify the list in `sw.js` if you add new files that should be cached for offline use.
+- If you plan to store large binaries such as images or media, install [Git LFS](https://git-lfs.github.com/) before cloning or pushing so these files are tracked efficiently.
+
+## Managing large files
+
+If you plan to store large assets such as images or videos in this repository,
+install [Git LFS](https://git-lfs.github.com/) before cloning or pushing. Git
+LFS stores binary data efficiently and prevents large files from bloating the
+repository. After installing, run `git lfs install` once, then commit files
+matching the patterns defined in `.gitattributes`.
+
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
 
 
 ## License
