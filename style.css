@@ -421,7 +421,6 @@ body {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-<
   .order-totals {
     flex-basis: auto;
   }
