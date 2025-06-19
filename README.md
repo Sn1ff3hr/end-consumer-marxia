@@ -35,3 +35,11 @@ These headers help reduce common web vulnerabilities when the app is deployed.
 - Review `manifest.json` to customise icons, name and theme colours for your brand.
 - Modify the list in `sw.js` if you add new files that should be cached for offline use.
 
+## Managing large files
+
+If you plan to store large assets such as images or videos in this repository,
+install [Git LFS](https://git-lfs.github.com/) before cloning or pushing. Git
+LFS stores binary data efficiently and prevents large files from bloating the
+repository. After installing, run `git lfs install` once, then commit files
+matching the patterns defined in `.gitattributes`.
+
