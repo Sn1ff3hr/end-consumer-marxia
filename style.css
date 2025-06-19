@@ -473,3 +473,25 @@ body {
    .toggle-btn { padding: 0.3em 0.7em; font-size: 0.8rem;}
 
 }
+
+/* Footer and Policy Page Styles */
+.policy-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.site-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
