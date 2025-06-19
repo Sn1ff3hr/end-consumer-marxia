@@ -44,3 +44,8 @@ LFS stores binary data efficiently and prevents large files from bloating the
 repository. After installing, run `git lfs install` once, then commit files
 matching the patterns defined in `.gitattributes`.
 
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
