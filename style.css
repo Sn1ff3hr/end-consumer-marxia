@@ -425,6 +425,14 @@ body {
   transform: rotate(90deg);
 }
 
+#cookieConsentBanner {
+  /* Styles for the cookie consent banner to prevent obscuring content */
+  height: auto;
+  max-height: 25vh; /* Reasonable max height */
+  overflow-y: auto; /* Allow scroll if content overflows */
+  /* Consider adding other necessary base styles: position, background, padding, z-index etc. */
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .order-totals {
