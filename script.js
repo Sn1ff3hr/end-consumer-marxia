@@ -52,37 +52,7 @@ let currentLang = localStorage.getItem('preferredLang') || 'en';
 
 // II. DOM ELEMENTS
 // ================================
-// Product Viewer Elements
-const currentProductImgEl = document.getElementById('currentProductImg');
-const productImagePlaceholderEl = document.getElementById('productImagePlaceholder');
-const currentProductNameEl = document.getElementById('currentProductName');
-const currentProductPriceEl = document.getElementById('currentProductPrice');
-const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
-const singleViewAddBtn = document.getElementById('singleViewAddBtn');
-const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
-// Note: arrowLeftBtn and arrowRightBtn will be fetched in DOMContentLoaded as they are class-based
-
-// Order Summary Elements
-const orderList = document.getElementById('orderList');
-const subtotalEl = document.getElementById('subtotal');
-const vatEl = document.getElementById('vat');
-const totalEl = document.getElementById('total');
-
-// Modal Elements
-const modalOverlay = document.getElementById('modalOverlay');
-const modalImage = document.getElementById('modalImage');
-// Note: modalContent and modalCloseBtn will be fetched in DOMContentLoaded
-
-// Language Switch Element
-const langBtn = document.getElementById('langBtn'); // Already an ID
-
-// Delivery Toggle Elements
-const deliveryYesBtn = document.getElementById('deliveryYesBtn');
-const deliveryNoBtn = document.getElementById('deliveryNoBtn');
-
-// Pay Button
-const payBtn = document.getElementById('submitBtn'); // Already an ID
-
+// DOM elements will be fetched inside DOMContentLoaded
 
 // III. CORE APPLICATION LOGIC
 // ================================
@@ -93,6 +63,14 @@ const payBtn = document.getElementById('submitBtn'); // Already an ID
  * Renders the current product in the main view.
  */
 function renderCurrentProductView() {
+  const currentProductImgEl = document.getElementById('currentProductImg');
+  const productImagePlaceholderEl = document.getElementById('productImagePlaceholder');
+  const currentProductNameEl = document.getElementById('currentProductName');
+  const currentProductPriceEl = document.getElementById('currentProductPrice');
+  const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
+  const singleViewAddBtn = document.getElementById('singleViewAddBtn');
+  const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
+
   if (products.length === 0) {
     if (currentProductImgEl) currentProductImgEl.style.display = 'none';
     if (productImagePlaceholderEl) {
@@ -151,6 +129,7 @@ function navigateProduct(direction) {
 function updateQty(change) {
   if (products.length === 0) return;
   products[currentIndex].qty = Math.max(0, products[currentIndex].qty + change);
+  const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
   if (singleViewProductQtyEl) singleViewProductQtyEl.textContent = products[currentIndex].qty;
   updateSummary();
 }
@@ -161,7 +140,15 @@ function updateQty(change) {
  * Updates the order summary list and totals.
  */
 function updateSummary() {
-  if (!orderList || !subtotalEl || !vatEl || !totalEl) return;
+  const orderList = document.getElementById('orderList');
+  const subtotalEl = document.getElementById('subtotal');
+  const vatEl = document.getElementById('vat');
+  const totalEl = document.getElementById('total');
+
+  if (!orderList || !subtotalEl || !vatEl || !totalEl) {
+    // console.error("Order summary elements not found in updateSummary. Cannot update totals or list.");
+    return; // Early exit if critical summary elements are missing
+  }
   orderList.innerHTML = '';
   let subtotal = 0;
   const vatRate = 0.12;
@@ -193,7 +180,10 @@ function updateSummary() {
  * @param {string} imageSrc - The source URL of the image to display.
  */
 function openModal(imageSrc) {
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalImage = document.getElementById('modalImage');
   if (!modalOverlay || !modalImage) return;
+
   if (!imageSrc || imageSrc.includes('No%20Image%20Available') || imageSrc.endsWith('/')) {
     console.log("No valid image to zoom or placeholder is shown.");
     return;
@@ -205,6 +195,7 @@ function openModal(imageSrc) {
  * Closes the image modal.
  */
 function closeModal() {
+  const modalOverlay = document.getElementById('modalOverlay');
   if (modalOverlay) modalOverlay.classList.remove('active');
 }
 
@@ -217,7 +208,8 @@ function toggleLang() {
   currentLang = currentLang === 'en' ? 'es' : 'en';
   localStorage.setItem('preferredLang', currentLang);
   document.documentElement.lang = currentLang;
-  if (langBtn) langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN';
+  const langBtnEl = document.getElementById('langBtn');
+  if (langBtnEl) langBtnEl.textContent = currentLang === 'en' ? 'ES' : 'EN';
   applyTranslations();
   renderCurrentProductView();
 }
@@ -227,15 +219,28 @@ function toggleLang() {
  */
 function applyTranslations() {
   document.documentElement.lang = currentLang;
-  document.getElementById('appTitle')?.textContent = translations[currentLang].appTitle;
-  document.getElementById('summaryTitle')?.textContent = translations[currentLang].summaryTitle;
-  document.getElementById('submitBtn')?.textContent = translations[currentLang].payButton; // payBtn also refers to this
-  document.getElementById('subtotalLabel')?.textContent = translations[currentLang].subtotalLabel;
-  document.getElementById('vatLabel')?.textContent = translations[currentLang].vatLabel;
-  document.getElementById('totalLabel')?.textContent = translations[currentLang].totalLabel;
-  document.getElementById('deliveryLabel')?.textContent = translations[currentLang].deliveryLabel;
+  const appTitleEl = document.getElementById('appTitle');
+  if (appTitleEl) appTitleEl.textContent = translations[currentLang].appTitle;
+
+  const summaryTitleEl = document.getElementById('summaryTitle');
+  if (summaryTitleEl) summaryTitleEl.textContent = translations[currentLang].summaryTitle;
+
+  const submitBtnEl = document.getElementById('submitBtn');
+  if (submitBtnEl) submitBtnEl.textContent = translations[currentLang].payButton;
+
+  const subtotalLabelEl = document.getElementById('subtotalLabel');
+  if (subtotalLabelEl) subtotalLabelEl.textContent = translations[currentLang].subtotalLabel;
+
+  const vatLabelEl = document.getElementById('vatLabel');
+  if (vatLabelEl) vatLabelEl.textContent = translations[currentLang].vatLabel;
+
+  const totalLabelEl = document.getElementById('totalLabel');
+  if (totalLabelEl) totalLabelEl.textContent = translations[currentLang].totalLabel;
+
+  const deliveryLabelEl = document.getElementById('deliveryLabel');
+  if (deliveryLabelEl) deliveryLabelEl.textContent = translations[currentLang].deliveryLabel;
   // ARIA labels for product navigation and modal might also be updated here if they were dynamic
-  updateSummary(); // For empty item text
+  updateSummary(); // For empty item text, which itself fetches elements
 }
 
 // F. Order Submission
@@ -257,17 +262,46 @@ function submitOrder() {
 // IV. EVENT LISTENERS & INITIALIZATION
 // =====================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Re-fetch some elements that use querySelector or are specific to DOMContentLoaded context
-  const arrowLeftBtnLocal = document.querySelector('.arrow.arrow-left');
-  const arrowRightBtnLocal = document.querySelector('.arrow.arrow-right');
+  // Fetch ALL DOM elements here
+  const currentProductImgEl = document.getElementById('currentProductImg');
+  const productImagePlaceholderEl = document.getElementById('productImagePlaceholder');
+  const currentProductNameEl = document.getElementById('currentProductName');
+  const currentProductPriceEl = document.getElementById('currentProductPrice');
+  const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
+  const singleViewAddBtn = document.getElementById('singleViewAddBtn');
+  const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
+
+  const orderList = document.getElementById('orderList');
+  const subtotalEl = document.getElementById('subtotal'); // Though not directly used for event, good to fetch with group
+  const vatEl = document.getElementById('vat'); // same as above
+  const totalEl = document.getElementById('total'); // same as above
+
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalImage = document.getElementById('modalImage'); // Though not directly used for event, good to fetch with group
   const modalContentLocal = document.querySelector('.modal-content');
   const modalCloseBtnLocal = document.querySelector('.modal-close');
 
-  // Initial language setup (already done for langBtn text content)
+  const langBtn = document.getElementById('langBtn');
+
+  const deliveryYesBtn = document.getElementById('deliveryYesBtn');
+  const deliveryNoBtn = document.getElementById('deliveryNoBtn');
+
+  const payBtn = document.getElementById('submitBtn');
+
+  const arrowLeftBtnLocal = document.querySelector('.arrow.arrow-left');
+  const arrowRightBtnLocal = document.querySelector('.arrow.arrow-right');
+
+  // Critical elements check
+  if (!singleViewAddBtn || !orderList || !langBtn || !payBtn || !arrowLeftBtnLocal || !arrowRightBtnLocal) {
+    console.error("Critical DOM elements missing after DOMContentLoaded. Functionality impaired.");
+    return;
+  }
+
+  // Initial language setup
   document.documentElement.lang = currentLang;
   if (langBtn) {
     langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN'; // Set initial text
-    langBtn.addEventListener('click', toggleLang);
+    langBtn.addEventListener('click', toggleLang); // toggleLang will fetch its own langBtn for text update
   }
 
   // Product Navigation
@@ -275,19 +309,24 @@ document.addEventListener('DOMContentLoaded', () => {
   if (arrowRightBtnLocal) arrowRightBtnLocal.addEventListener('click', () => navigateProduct(1));
 
   // Product Image Modal Trigger
-  if (currentProductImgEl) currentProductImgEl.addEventListener('click', () => {
-    if (products[currentIndex] && products[currentIndex].img) {
-       openModal(products[currentIndex].img);
-    } else {
-       openModal(''); // openModal handles invalid src
-    }
-  });
+  if (currentProductImgEl) {
+    currentProductImgEl.addEventListener('click', () => {
+      // openModal will fetch its own DOM elements
+      if (products[currentIndex] && products[currentIndex].img) {
+         openModal(products[currentIndex].img);
+      } else {
+         openModal('');
+      }
+    });
+  }
 
   // Quantity Buttons
+  // updateQty will fetch its own DOM elements for display
   if (singleViewAddBtn) singleViewAddBtn.addEventListener('click', () => updateQty(1));
   if (singleViewRemoveBtn) singleViewRemoveBtn.addEventListener('click', () => updateQty(-1));
 
   // Modal Close Mechanisms
+  // closeModal will fetch its own modalOverlay
   if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
   if (modalCloseBtnLocal) modalCloseBtnLocal.addEventListener('click', closeModal);
   if (modalContentLocal) modalContentLocal.addEventListener('click', (event) => event.stopPropagation());
@@ -322,8 +361,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (payBtn) payBtn.addEventListener('click', submitOrder);
 
   // Global Key Events (Modal Escape)
+  // closeModal will fetch its own modalOverlay
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('active')) {
+    // Need to fetch modalOverlay here for the classList.contains check, or pass it to closeModal
+    // For now, let closeModal handle its own element fetching. This check is fine.
+    const currentModalOverlay = document.getElementById('modalOverlay'); // Fetch for check
+    if (e.key === 'Escape' && currentModalOverlay && currentModalOverlay.classList.contains('active')) {
       closeModal();
     }
   });
