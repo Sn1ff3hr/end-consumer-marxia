@@ -39,6 +39,12 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.toggle-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; /* Adjust gap as needed for spacing between buttons */
+}
+
 #appTitle {
   margin: 0;
   color: var(--primary);
@@ -593,7 +599,7 @@ body {
   color: var(--primary); /* Use primary color for the icon */
   border: 1px solid var(--primary); /* Border similar to lang-switch but using primary */
   border-radius: 0.5em; /* Consistent with lang-switch */
-  padding: 0.3em 0.6em; /* Adjust padding to fit icon */
+  padding: 0.4em 0.8em; /* Adjust padding to fit icon */
   cursor: pointer;
   transition: transform 0.2s, color 0.3s, border-color 0.3s; /* Added color and border-color transition */
 }
