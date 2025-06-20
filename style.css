@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   --primary: #5028e0; /* Purple from sample */
   --accent: #00d0b3;  /* Teal from sample */
@@ -39,22 +45,37 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.toggle-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; /* Adjust gap as needed for spacing between buttons */
+}
+
 #appTitle {
   margin: 0;
   color: var(--primary);
 }
 
 .lang-switch {
-  background: var(--accent);
-  color: white;
-  padding: 0.4em 0.8em;
-  border-radius: 0.5em;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s ease;
+  background: none;                         /* Changed from var(--accent) */
+  color: var(--primary);                  /* Changed from white */
+  border: 1px solid var(--primary);       /* Added */
+  padding: 0.4em 0.8em;                   /* Unchanged */
+  border-radius: 0.5em;                   /* Unchanged */
+  cursor: pointer;                        /* Unchanged */
+  font-weight: bold;                      /* Kept from original lang-switch, ensure theme-toggle is bold too or remove from here */
+  font-size: 1.2rem;                      /* Added to match theme-toggle, or ensure consistent base */
+  transition: transform 0.2s, color 0.3s, border-color 0.3s; /* To match theme-toggle */
+  /* remove transition: background-color 0.2s ease; */
 }
+
 .lang-switch:hover {
-  background-color: #00b89f; /* Darker accent */
+  /* background-color: #00b89f; Removed */
+  transform: scale(1.1); /* Added to match theme-toggle */
+  /* Optional: if we want text/border to change color on hover like some themes do with primary buttons:
+  color: var(--accent);
+  border-color: var(--accent);
+  */
 }
 
 /* Product Viewer Styles */
@@ -564,4 +585,47 @@ button#acceptCookieConsent:hover { /* Added for completeness */
 
 .site-footer a:hover {
   text-decoration: underline;
+}
+
+[data-theme="dark"] {
+  --background: #121212;
+  --surface: #1e1e1e; /* A common practice for dark themes */
+  --text: #e0e0e0;
+  --primary: #8ab4f8; /* Lighter shade for primary interactive elements */
+  --accent: #17c2a8; /* Slightly adjusted accent for better contrast if needed */
+  --danger: #ff6b8f; /* Brighter red for better visibility */
+  /* Consider variables for borders if they need to change, e.g., --border-color: #333; */
+}
+
+/* Ensure smooth transitions for theme changes */
+body {
+  /* style.css already has 'transition: background-color 0.2s ease, color 0.2s ease;' for some elements,
+     but the body itself needs it for the main background/text color switch.
+     The sample uses 0.3s, so let's apply that to the body.
+     If 'body' already has transitions, this will add to them or override them if they target the same properties.
+  */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Theme toggle button styling - similar to lang-switch but can be unique */
+#theme-toggle {
+  font-size: 1.2rem; /* Sample uses 1.5rem, lang-switch is smaller, let's try 1.2rem */
+  background: none; /* Sample uses none */
+  color: var(--primary); /* Use primary color for the icon */
+  border: 1px solid var(--primary); /* Border similar to lang-switch but using primary */
+  border-radius: 0.5em; /* Consistent with lang-switch */
+  padding: 0.4em 0.8em; /* Adjust padding to fit icon */
+  cursor: pointer;
+  font-weight: bold; /* Added for consistency */
+  transition: transform 0.2s, color 0.3s, border-color 0.3s; /* Added color and border-color transition */
+}
+
+#theme-toggle:hover {
+  transform: scale(1.1); /* Sample uses 1.2, let's try 1.1 */
+  /* Optional: change color on hover, e.g., color: var(--accent); */
+}
+
+/* Ensure other elements also transition smoothly if they have background/text colors */
+.container, .single-product-display, .order-items, .totals-container, .modal-content {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
