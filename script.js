@@ -50,6 +50,8 @@ const translations = {
 /** @type {string} currentLang - Current selected language ('en' or 'es'). */
 let currentLang = localStorage.getItem('preferredLang') || 'en';
 
+const themeKey = 'user-theme';
+
 // II. DOM ELEMENTS
 // ================================
 // DOM elements will be fetched inside DOMContentLoaded
@@ -57,7 +59,24 @@ let currentLang = localStorage.getItem('preferredLang') || 'en';
 // III. CORE APPLICATION LOGIC
 // ================================
 
-// A. Product Display & Navigation
+// A. Theme Management
+// --------------------------------
+/**
+ * Sets the theme for the application.
+ * @param {string} theme - The theme to set ('light' or 'dark').
+ */
+function setTheme(theme) {
+  const root = document.documentElement;
+  const themeToggleButton = document.getElementById('theme-toggle'); // Ensure it's accessible
+
+  root.setAttribute('data-theme', theme);
+  if (themeToggleButton) {
+    themeToggleButton.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+  localStorage.setItem(themeKey, theme);
+}
+
+// B. Product Display & Navigation
 // --------------------------------
 /**
  * Renders the current product in the main view.
@@ -294,9 +313,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const arrowLeftBtnLocal = document.querySelector('.arrow.arrow-left');
   const arrowRightBtnLocal = document.querySelector('.arrow.arrow-right');
 
+  const themeToggleButton = document.getElementById('theme-toggle');
+
   // Critical elements check
   // Added currentProductImgEl, modalOverlay to critical check for robustness from previous step, productImagePlaceholderEl for new logic
-  if (!singleViewAddBtn || !orderList || !langBtn || !payBtn || !arrowLeftBtnLocal || !arrowRightBtnLocal || !currentProductImgEl || !modalOverlay || !productImagePlaceholderEl) {
+  // Added themeToggleButton to critical check
+  if (!singleViewAddBtn || !orderList || !langBtn || !payBtn || !arrowLeftBtnLocal || !arrowRightBtnLocal || !currentProductImgEl || !modalOverlay || !productImagePlaceholderEl || !themeToggleButton) {
     console.error("Critical DOM elements missing after DOMContentLoaded. Functionality impaired.");
     return;
   }
@@ -310,6 +332,26 @@ document.addEventListener('DOMContentLoaded', () => {
   if (langBtn) {
     langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN'; // Set initial text
     langBtn.addEventListener('click', toggleLang); // toggleLang will fetch its own langBtn for text update
+  }
+
+  // Initial theme setup
+  const savedTheme = localStorage.getItem(themeKey);
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  if (themeToggleButton) { // Check if button exists before adding listener and setting initial theme
+      setTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light')); // Set initial theme
+
+      themeToggleButton.addEventListener('click', () => {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          setTheme(nextTheme);
+      });
+  } else {
+      // console.warn("Theme toggle button not found. Theme functionality will be limited.");
+      // Fallback or default theme setting if button is not critical
+      const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', initialTheme);
+      localStorage.setItem(themeKey, initialTheme);
   }
 
   // Product Navigation
