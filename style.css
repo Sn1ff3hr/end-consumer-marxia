@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   --primary: #5028e0; /* Purple from sample */
   --accent: #00d0b3;  /* Teal from sample */
@@ -610,7 +616,6 @@ body {
   border-radius: 0.5em; /* Consistent with lang-switch */
   padding: 0.4em 0.8em; /* Adjust padding to fit icon */
   cursor: pointer;
-
   font-weight: bold; /* Added for consistency */
   transition: transform 0.2s, color 0.3s, border-color 0.3s; /* Added color and border-color transition */
 }
