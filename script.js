@@ -71,7 +71,7 @@ function setTheme(theme) {
 
   root.setAttribute('data-theme', theme);
   if (themeToggleButton) {
-    themeToggleButton.textContent = theme === 'dark' ? '☀️' : '🌙';
+    themeToggleButton.textContent = theme === 'dark' ? 'Light' : 'Dark';
   }
   localStorage.setItem(themeKey, theme);
 }
