@@ -51,16 +51,25 @@ body {
 }
 
 .lang-switch {
-  background: var(--accent);
-  color: white;
-  padding: 0.4em 0.8em;
-  border-radius: 0.5em;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s ease;
+  background: none;                         /* Changed from var(--accent) */
+  color: var(--primary);                  /* Changed from white */
+  border: 1px solid var(--primary);       /* Added */
+  padding: 0.4em 0.8em;                   /* Unchanged */
+  border-radius: 0.5em;                   /* Unchanged */
+  cursor: pointer;                        /* Unchanged */
+  font-weight: bold;                      /* Kept from original lang-switch, ensure theme-toggle is bold too or remove from here */
+  font-size: 1.2rem;                      /* Added to match theme-toggle, or ensure consistent base */
+  transition: transform 0.2s, color 0.3s, border-color 0.3s; /* To match theme-toggle */
+  /* remove transition: background-color 0.2s ease; */
 }
+
 .lang-switch:hover {
-  background-color: #00b89f; /* Darker accent */
+  /* background-color: #00b89f; Removed */
+  transform: scale(1.1); /* Added to match theme-toggle */
+  /* Optional: if we want text/border to change color on hover like some themes do with primary buttons:
+  color: var(--accent);
+  border-color: var(--accent);
+  */
 }
 
 /* Product Viewer Styles */
@@ -601,6 +610,8 @@ body {
   border-radius: 0.5em; /* Consistent with lang-switch */
   padding: 0.4em 0.8em; /* Adjust padding to fit icon */
   cursor: pointer;
+
+  font-weight: bold; /* Added for consistency */
   transition: transform 0.2s, color 0.3s, border-color 0.3s; /* Added color and border-color transition */
 }
 
