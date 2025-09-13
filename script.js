@@ -54,7 +54,7 @@ const themeKey = 'user-theme';
 
 // II. DOM ELEMENTS
 // ================================
-// DOM elements will be fetched inside DOMContentLoaded
+let domElements = {};
 
 // III. CORE APPLICATION LOGIC
 // ================================
@@ -67,11 +67,9 @@ const themeKey = 'user-theme';
  */
 function setTheme(theme) {
   const root = document.documentElement;
-  const themeToggleButton = document.getElementById('theme-toggle'); // Ensure it's accessible
-
   root.setAttribute('data-theme', theme);
-  if (themeToggleButton) {
-    themeToggleButton.textContent = theme === 'dark' ? 'Light' : 'Dark';
+  if (domElements.themeToggleButton) {
+    domElements.themeToggleButton.textContent = theme === 'dark' ? 'Light' : 'Dark';
   }
   localStorage.setItem(themeKey, theme);
 }
@@ -82,24 +80,26 @@ function setTheme(theme) {
  * Renders the current product in the main view.
  */
 function renderCurrentProductView() {
-  const currentProductImgEl = document.getElementById('currentProductImg');
-  const productImagePlaceholderEl = document.getElementById('productImagePlaceholder');
-  const currentProductNameEl = document.getElementById('currentProductName');
-  const currentProductPriceEl = document.getElementById('currentProductPrice');
-  const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
-  const singleViewAddBtn = document.getElementById('singleViewAddBtn');
-  const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
+  const {
+    currentProductImg,
+    productImagePlaceholder,
+    currentProductName,
+    currentProductPrice,
+    singleViewProductQty,
+    singleViewAddBtn,
+    singleViewRemoveBtn
+  } = domElements;
 
   if (products.length === 0) {
-    if (currentProductImgEl) currentProductImgEl.classList.add('hidden'); // Use class to hide
-    if (productImagePlaceholderEl) {
-      productImagePlaceholderEl.classList.remove('hidden'); // Use class to show
-      productImagePlaceholderEl.style.display = 'flex'; // Keep flex behavior
-      productImagePlaceholderEl.textContent = translations[currentLang].noProductsLoaded;
+    if (currentProductImg) currentProductImg.classList.add('hidden');
+    if (productImagePlaceholder) {
+      productImagePlaceholder.classList.remove('hidden');
+      productImagePlaceholder.style.display = 'flex';
+      productImagePlaceholder.textContent = translations[currentLang].noProductsLoaded;
     }
-    if (currentProductNameEl) currentProductNameEl.textContent = 'N/A';
-    if (currentProductPriceEl) currentProductPriceEl.textContent = '$0.00';
-    if (singleViewProductQtyEl) singleViewProductQtyEl.textContent = '0';
+    if (currentProductName) currentProductName.textContent = 'N/A';
+    if (currentProductPrice) currentProductPrice.textContent = '$0.00';
+    if (singleViewProductQty) singleViewProductQty.textContent = '0';
     if (singleViewAddBtn) singleViewAddBtn.setAttribute('aria-label', `Add one item`);
     if (singleViewRemoveBtn) singleViewRemoveBtn.setAttribute('aria-label', `Remove one item`);
     updateSummary();
@@ -108,25 +108,26 @@ function renderCurrentProductView() {
 
   const product = products[currentIndex];
   if (product.img && product.img.trim() !== '') {
-    if (currentProductImgEl) {
-      currentProductImgEl.src = product.img;
-      currentProductImgEl.alt = product.name;
-      currentProductImgEl.classList.remove('hidden'); // Use class to show
-      currentProductImgEl.style.display = 'block'; // Keep block behavior
+    if (currentProductImg) {
+      currentProductImg.src = product.img;
+      currentProductImg.alt = product.name;
+      currentProductImg.setAttribute('aria-label', `View larger image of ${product.name}`);
+      currentProductImg.classList.remove('hidden');
+      currentProductImg.style.display = 'block';
     }
-    if (productImagePlaceholderEl) productImagePlaceholderEl.classList.add('hidden'); // Use class to hide
+    if (productImagePlaceholder) productImagePlaceholder.classList.add('hidden');
   } else {
-    if (currentProductImgEl) currentProductImgEl.classList.add('hidden'); // Use class to hide
-    if (productImagePlaceholderEl) {
-      productImagePlaceholderEl.classList.remove('hidden'); // Use class to show
-      productImagePlaceholderEl.style.display = 'flex'; // Keep flex behavior
-      productImagePlaceholderEl.textContent = translations[currentLang].noImageAvailable;
+    if (currentProductImg) currentProductImg.classList.add('hidden');
+    if (productImagePlaceholder) {
+      productImagePlaceholder.classList.remove('hidden');
+      productImagePlaceholder.style.display = 'flex';
+      productImagePlaceholder.textContent = translations[currentLang].noImageAvailable;
     }
   }
 
-  if (currentProductNameEl) currentProductNameEl.textContent = product.name;
-  if (currentProductPriceEl) currentProductPriceEl.textContent = `$${product.price.toFixed(2)}`;
-  if (singleViewProductQtyEl) singleViewProductQtyEl.textContent = product.qty;
+  if (currentProductName) currentProductName.textContent = product.name;
+  if (currentProductPrice) currentProductPrice.textContent = `$${product.price.toFixed(2)}`;
+  if (singleViewProductQty) singleViewProductQty.textContent = product.qty;
   if (singleViewAddBtn) singleViewAddBtn.setAttribute('aria-label', `Add one ${product.name}`);
   if (singleViewRemoveBtn) singleViewRemoveBtn.setAttribute('aria-label', `Remove one ${product.name}`);
   updateSummary();
@@ -151,8 +152,9 @@ function navigateProduct(direction) {
 function updateQty(change) {
   if (products.length === 0) return;
   products[currentIndex].qty = Math.max(0, products[currentIndex].qty + change);
-  const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
-  if (singleViewProductQtyEl) singleViewProductQtyEl.textContent = products[currentIndex].qty;
+  if (domElements.singleViewProductQty) {
+    domElements.singleViewProductQty.textContent = products[currentIndex].qty;
+  }
   updateSummary();
 }
 
@@ -162,37 +164,38 @@ function updateQty(change) {
  * Updates the order summary list and totals.
  */
 function updateSummary() {
-  const orderList = document.getElementById('orderList');
-  const subtotalEl = document.getElementById('subtotal');
-  const vatEl = document.getElementById('vat');
-  const totalEl = document.getElementById('total');
+  const { orderList, subtotal, vat, total } = domElements;
 
-  if (!orderList || !subtotalEl || !vatEl || !totalEl) {
-    // console.error("Order summary elements not found in updateSummary. Cannot update totals or list.");
-    return; // Early exit if critical summary elements are missing
+  if (!orderList || !subtotal || !vat || !total) {
+    return;
   }
   orderList.innerHTML = '';
-  let subtotal = 0;
+  let subtotalValue = 0;
   const vatRate = 0.12;
   const activeProducts = products.filter(p => p.qty > 0);
-  for (let i = 0; i < 5; i++) {
-    const li = document.createElement('li');
-    if (activeProducts[i]) {
-      const p = activeProducts[i];
-      const totalItemPrice = p.qty * p.price;
-      subtotal += totalItemPrice;
-      li.innerHTML = `<span>${p.name} x ${p.qty}</span><span>$${totalItemPrice.toFixed(2)}</span>`;
-    } else {
-      li.innerHTML = `<span>${translations[currentLang].emptyItem}</span><span></span>`;
-    }
-    orderList.appendChild(li);
-  }
-  const vatAmount = subtotal * vatRate;
-  const totalAmount = subtotal + vatAmount;
 
-  if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2);
-  if (vatEl) vatEl.textContent = vatAmount.toFixed(2);
-  if (totalEl) totalEl.textContent = totalAmount.toFixed(2);
+  if (activeProducts.length === 0) {
+    for (let i = 0; i < 5; i++) {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${translations[currentLang].emptyItem}</span><span></span>`;
+      orderList.appendChild(li);
+    }
+  } else {
+    activeProducts.forEach(p => {
+      const totalItemPrice = p.qty * p.price;
+      subtotalValue += totalItemPrice;
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${p.name} x ${p.qty}</span><span>$${totalItemPrice.toFixed(2)}</span>`;
+      orderList.appendChild(li);
+    });
+  }
+
+  const vatAmount = subtotalValue * vatRate;
+  const totalAmount = subtotalValue + vatAmount;
+
+  subtotal.textContent = subtotalValue.toFixed(2);
+  vat.textContent = vatAmount.toFixed(2);
+  total.textContent = totalAmount.toFixed(2);
 }
 
 // D. Modal Viewer
@@ -202,8 +205,7 @@ function updateSummary() {
  * @param {string} imageSrc - The source URL of the image to display.
  */
 function openModal(imageSrc) {
-  const modalOverlay = document.getElementById('modalOverlay');
-  const modalImage = document.getElementById('modalImage');
+  const { modalOverlay, modalImage } = domElements;
   if (!modalOverlay || !modalImage) return;
 
   if (!imageSrc || imageSrc.includes('No%20Image%20Available') || imageSrc.endsWith('/')) {
@@ -217,8 +219,9 @@ function openModal(imageSrc) {
  * Closes the image modal.
  */
 function closeModal() {
-  const modalOverlay = document.getElementById('modalOverlay');
-  if (modalOverlay) modalOverlay.classList.remove('active');
+  if (domElements.modalOverlay) {
+    domElements.modalOverlay.classList.remove('active');
+  }
 }
 
 // E. Language & Translations
@@ -230,8 +233,9 @@ function toggleLang() {
   currentLang = currentLang === 'en' ? 'es' : 'en';
   localStorage.setItem('preferredLang', currentLang);
   document.documentElement.lang = currentLang;
-  const langBtnEl = document.getElementById('langBtn');
-  if (langBtnEl) langBtnEl.textContent = currentLang === 'en' ? 'ES' : 'EN';
+  if (domElements.langBtn) {
+    domElements.langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN';
+  }
   applyTranslations();
   renderCurrentProductView();
 }
@@ -241,28 +245,24 @@ function toggleLang() {
  */
 function applyTranslations() {
   document.documentElement.lang = currentLang;
-  const appTitleEl = document.getElementById('appTitle');
-  if (appTitleEl) appTitleEl.textContent = translations[currentLang].appTitle;
+  const {
+    appTitle,
+    summaryTitle,
+    submitBtn,
+    subtotalLabel,
+    vatLabel,
+    totalLabel,
+    deliveryLabel
+  } = domElements;
 
-  const summaryTitleEl = document.getElementById('summaryTitle');
-  if (summaryTitleEl) summaryTitleEl.textContent = translations[currentLang].summaryTitle;
-
-  const submitBtnEl = document.getElementById('submitBtn');
-  if (submitBtnEl) submitBtnEl.textContent = translations[currentLang].payButton;
-
-  const subtotalLabelEl = document.getElementById('subtotalLabel');
-  if (subtotalLabelEl) subtotalLabelEl.textContent = translations[currentLang].subtotalLabel;
-
-  const vatLabelEl = document.getElementById('vatLabel');
-  if (vatLabelEl) vatLabelEl.textContent = translations[currentLang].vatLabel;
-
-  const totalLabelEl = document.getElementById('totalLabel');
-  if (totalLabelEl) totalLabelEl.textContent = translations[currentLang].totalLabel;
-
-  const deliveryLabelEl = document.getElementById('deliveryLabel');
-  if (deliveryLabelEl) deliveryLabelEl.textContent = translations[currentLang].deliveryLabel;
-  // ARIA labels for product navigation and modal might also be updated here if they were dynamic
-  updateSummary(); // For empty item text, which itself fetches elements
+  if (appTitle) appTitle.textContent = translations[currentLang].appTitle;
+  if (summaryTitle) summaryTitle.textContent = translations[currentLang].summaryTitle;
+  if (submitBtn) submitBtn.textContent = translations[currentLang].payButton;
+  if (subtotalLabel) subtotalLabel.textContent = translations[currentLang].subtotalLabel;
+  if (vatLabel) vatLabel.textContent = translations[currentLang].vatLabel;
+  if (totalLabel) totalLabel.textContent = translations[currentLang].totalLabel;
+  if (deliveryLabel) deliveryLabel.textContent = translations[currentLang].deliveryLabel;
+  updateSummary();
 }
 
 // F. Order Submission
@@ -284,162 +284,129 @@ function submitOrder() {
 // IV. EVENT LISTENERS & INITIALIZATION
 // =====================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Fetch ALL DOM elements here
-  const currentProductImgEl = document.getElementById('currentProductImg');
-  const productImagePlaceholderEl = document.getElementById('productImagePlaceholder');
-  const currentProductNameEl = document.getElementById('currentProductName');
-  const currentProductPriceEl = document.getElementById('currentProductPrice');
-  const singleViewProductQtyEl = document.getElementById('singleViewProductQty');
-  const singleViewAddBtn = document.getElementById('singleViewAddBtn');
-  const singleViewRemoveBtn = document.getElementById('singleViewRemoveBtn');
+  domElements = {
+    currentProductImg: document.getElementById('currentProductImg'),
+    productImagePlaceholder: document.getElementById('productImagePlaceholder'),
+    currentProductName: document.getElementById('currentProductName'),
+    currentProductPrice: document.getElementById('currentProductPrice'),
+    singleViewProductQty: document.getElementById('singleViewProductQty'),
+    singleViewAddBtn: document.getElementById('singleViewAddBtn'),
+    singleViewRemoveBtn: document.getElementById('singleViewRemoveBtn'),
+    orderList: document.getElementById('orderList'),
+    subtotal: document.getElementById('subtotal'),
+    vat: document.getElementById('vat'),
+    total: document.getElementById('total'),
+    modalOverlay: document.getElementById('modalOverlay'),
+    modalImage: document.getElementById('modalImage'),
+    modalContent: document.querySelector('.modal-content'),
+    modalCloseBtn: document.querySelector('.modal-close'),
+    langBtn: document.getElementById('langBtn'),
+    deliveryYesBtn: document.getElementById('deliveryYesBtn'),
+    deliveryNoBtn: document.getElementById('deliveryNoBtn'),
+    submitBtn: document.getElementById('submitBtn'),
+    arrowLeftBtn: document.querySelector('.arrow.arrow-left'),
+    arrowRightBtn: document.querySelector('.arrow.arrow-right'),
+    themeToggleButton: document.getElementById('theme-toggle'),
+    appTitle: document.getElementById('appTitle'),
+    summaryTitle: document.getElementById('summaryTitle'),
+    subtotalLabel: document.getElementById('subtotalLabel'),
+    vatLabel: document.getElementById('vatLabel'),
+    totalLabel: document.getElementById('totalLabel'),
+    deliveryLabel: document.getElementById('deliveryLabel'),
+    cookieConsentBanner: document.getElementById('cookieConsentBanner'),
+    acceptCookieConsentBtn: document.getElementById('acceptCookieConsent'),
+  };
 
-  const orderList = document.getElementById('orderList');
-  const subtotalEl = document.getElementById('subtotal'); // Though not directly used for event, good to fetch with group
-  const vatEl = document.getElementById('vat'); // same as above
-  const totalEl = document.getElementById('total'); // same as above
-
-  const modalOverlay = document.getElementById('modalOverlay');
-  const modalImage = document.getElementById('modalImage'); // Though not directly used for event, good to fetch with group
-  const modalContentLocal = document.querySelector('.modal-content');
-  const modalCloseBtnLocal = document.querySelector('.modal-close');
-
-  const langBtn = document.getElementById('langBtn');
-
-  const deliveryYesBtn = document.getElementById('deliveryYesBtn');
-  const deliveryNoBtn = document.getElementById('deliveryNoBtn');
-
-  const payBtn = document.getElementById('submitBtn');
-
-  const arrowLeftBtnLocal = document.querySelector('.arrow.arrow-left');
-  const arrowRightBtnLocal = document.querySelector('.arrow.arrow-right');
-
-  const themeToggleButton = document.getElementById('theme-toggle');
-
-  // Critical elements check
-  // Added currentProductImgEl, modalOverlay to critical check for robustness from previous step, productImagePlaceholderEl for new logic
-  // Added themeToggleButton to critical check
-  if (!singleViewAddBtn || !orderList || !langBtn || !payBtn || !arrowLeftBtnLocal || !arrowRightBtnLocal || !currentProductImgEl || !modalOverlay || !productImagePlaceholderEl || !themeToggleButton) {
-    console.error("Critical DOM elements missing after DOMContentLoaded. Functionality impaired.");
-    return;
+  if (domElements.productImagePlaceholder) {
+    domElements.productImagePlaceholder.classList.add('hidden');
   }
 
-  // Initial visibility setup
-  if (productImagePlaceholderEl) productImagePlaceholderEl.classList.add('hidden');
-
-
-  // Initial language setup
   document.documentElement.lang = currentLang;
-  if (langBtn) {
-    langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN'; // Set initial text
-    langBtn.addEventListener('click', toggleLang); // toggleLang will fetch its own langBtn for text update
+  if (domElements.langBtn) {
+    domElements.langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN';
+    domElements.langBtn.addEventListener('click', toggleLang);
   }
 
-  // Initial theme setup
   const savedTheme = localStorage.getItem(themeKey);
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  setTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light'));
 
-  if (themeToggleButton) { // Check if button exists before adding listener and setting initial theme
-      setTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light')); // Set initial theme
-
-      themeToggleButton.addEventListener('click', () => {
-          const currentTheme = document.documentElement.getAttribute('data-theme');
-          const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-          setTheme(nextTheme);
-      });
-  } else {
-      // console.warn("Theme toggle button not found. Theme functionality will be limited.");
-      // Fallback or default theme setting if button is not critical
-      const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', initialTheme);
-      localStorage.setItem(themeKey, initialTheme);
+  if (domElements.themeToggleButton) {
+    domElements.themeToggleButton.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(nextTheme);
+    });
   }
 
-  // Product Navigation
-  if (arrowLeftBtnLocal) arrowLeftBtnLocal.addEventListener('click', () => navigateProduct(-1));
-  if (arrowRightBtnLocal) arrowRightBtnLocal.addEventListener('click', () => navigateProduct(1));
+  if (domElements.arrowLeftBtn) domElements.arrowLeftBtn.addEventListener('click', () => navigateProduct(-1));
+  if (domElements.arrowRightBtn) domElements.arrowRightBtn.addEventListener('click', () => navigateProduct(1));
 
-  // Product Image Modal Trigger
-  if (currentProductImgEl) {
-    currentProductImgEl.addEventListener('click', () => {
-      // openModal will fetch its own DOM elements
+  if (domElements.currentProductImg) {
+    domElements.currentProductImg.addEventListener('click', () => {
       if (products[currentIndex] && products[currentIndex].img) {
-         openModal(products[currentIndex].img);
+        openModal(products[currentIndex].img);
       } else {
-         openModal('');
+        openModal('');
       }
     });
   }
 
-  // Quantity Buttons
-  // updateQty will fetch its own DOM elements for display
-  if (singleViewAddBtn) singleViewAddBtn.addEventListener('click', () => updateQty(1));
-  if (singleViewRemoveBtn) singleViewRemoveBtn.addEventListener('click', () => updateQty(-1));
+  if (domElements.singleViewAddBtn) domElements.singleViewAddBtn.addEventListener('click', () => updateQty(1));
+  if (domElements.singleViewRemoveBtn) domElements.singleViewRemoveBtn.addEventListener('click', () => updateQty(-1));
 
-  // Modal Close Mechanisms
-  // closeModal will fetch its own modalOverlay
-  if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
-  if (modalCloseBtnLocal) modalCloseBtnLocal.addEventListener('click', closeModal);
-  if (modalContentLocal) modalContentLocal.addEventListener('click', (event) => event.stopPropagation());
+  if (domElements.modalOverlay) domElements.modalOverlay.addEventListener('click', closeModal);
+  if (domElements.modalCloseBtn) domElements.modalCloseBtn.addEventListener('click', closeModal);
+  if (domElements.modalContent) domElements.modalContent.addEventListener('click', (event) => event.stopPropagation());
 
-  // Delivery Toggle Buttons
-  if (deliveryYesBtn) {
-    deliveryYesBtn.addEventListener('click', () => {
-      if (!deliveryYesBtn.classList.contains('active')) {
-        deliveryYesBtn.classList.add('active');
-        deliveryYesBtn.setAttribute('aria-pressed', 'true');
-        if (deliveryNoBtn) {
-          deliveryNoBtn.classList.remove('active');
-          deliveryNoBtn.setAttribute('aria-pressed', 'false');
-        }
-      }
-    });
-  }
-  if (deliveryNoBtn) {
-    deliveryNoBtn.addEventListener('click', () => {
-      if (!deliveryNoBtn.classList.contains('active')) {
-        deliveryNoBtn.classList.add('active');
-        deliveryNoBtn.setAttribute('aria-pressed', 'true');
-        if (deliveryYesBtn) {
-          deliveryYesBtn.classList.remove('active');
-          deliveryYesBtn.setAttribute('aria-pressed', 'false');
+  if (domElements.deliveryYesBtn) {
+    domElements.deliveryYesBtn.addEventListener('click', () => {
+      if (!domElements.deliveryYesBtn.classList.contains('active')) {
+        domElements.deliveryYesBtn.classList.add('active');
+        domElements.deliveryYesBtn.setAttribute('aria-pressed', 'true');
+        if (domElements.deliveryNoBtn) {
+          domElements.deliveryNoBtn.classList.remove('active');
+          domElements.deliveryNoBtn.setAttribute('aria-pressed', 'false');
         }
       }
     });
   }
 
-  // Pay Button
-  if (payBtn) payBtn.addEventListener('click', submitOrder);
+  if (domElements.deliveryNoBtn) {
+    domElements.deliveryNoBtn.addEventListener('click', () => {
+      if (!domElements.deliveryNoBtn.classList.contains('active')) {
+        domElements.deliveryNoBtn.classList.add('active');
+        domElements.deliveryNoBtn.setAttribute('aria-pressed', 'true');
+        if (domElements.deliveryYesBtn) {
+          domElements.deliveryYesBtn.classList.remove('active');
+          domElements.deliveryYesBtn.setAttribute('aria-pressed', 'false');
+        }
+      }
+    });
+  }
 
-  // Global Key Events (Modal Escape)
-  // closeModal will fetch its own modalOverlay
+  if (domElements.submitBtn) domElements.submitBtn.addEventListener('click', submitOrder);
+
   document.addEventListener('keydown', (e) => {
-    // Need to fetch modalOverlay here for the classList.contains check, or pass it to closeModal
-    // For now, let closeModal handle its own element fetching. This check is fine.
-    const currentModalOverlay = document.getElementById('modalOverlay'); // Fetch for check
-    if (e.key === 'Escape' && currentModalOverlay && currentModalOverlay.classList.contains('active')) {
+    if (e.key === 'Escape' && domElements.modalOverlay && domElements.modalOverlay.classList.contains('active')) {
       closeModal();
     }
   });
 
-  // Cookie Consent Banner Logic
-  const cookieConsentBanner = document.getElementById('cookieConsentBanner');
-  const acceptCookieConsentBtn = document.getElementById('acceptCookieConsent');
-
-  if (cookieConsentBanner) { // Ensure banner exists before trying to modify it
-    cookieConsentBanner.classList.add('hidden'); // Initially hide
+  if (domElements.cookieConsentBanner) {
+    domElements.cookieConsentBanner.classList.add('hidden');
     if (!localStorage.getItem('cookieConsentAccepted')) {
-      cookieConsentBanner.classList.remove('hidden'); // Show if not accepted
+      domElements.cookieConsentBanner.classList.remove('hidden');
     }
   }
 
-  if (acceptCookieConsentBtn) {
-    acceptCookieConsentBtn.addEventListener('click', () => {
+  if (domElements.acceptCookieConsentBtn) {
+    domElements.acceptCookieConsentBtn.addEventListener('click', () => {
       localStorage.setItem('cookieConsentAccepted', 'true');
-      if (cookieConsentBanner) cookieConsentBanner.classList.add('hidden'); // Hide on accept
+      if (domElements.cookieConsentBanner) domElements.cookieConsentBanner.classList.add('hidden');
     });
   }
 
-  // Initial Render
   applyTranslations();
   renderCurrentProductView();
 });
