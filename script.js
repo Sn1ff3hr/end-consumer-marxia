@@ -14,6 +14,10 @@ const products = [
 /** @type {number} currentIndex - Index of the currently displayed product. */
 let currentIndex = 0;
 
+/** @type {boolean} isDeliveryIncluded - Whether delivery fee is included. */
+let isDeliveryIncluded = true;
+const deliveryFee = 3.00;
+
 /**
  * @type {Object} translations - Contains language strings for UI elements.
  */
@@ -25,6 +29,7 @@ const translations = {
     subtotalLabel: 'Subtotal',
     vatLabel: 'VAT',
     totalLabel: 'Total',
+    deliveryFeeLabel: 'Delivery',
     emptyItem: '&nbsp;',
     qtyLabel: 'Qty',
     orderAlert: '✅ Order submitted (simulated). Thank you!',
@@ -39,6 +44,7 @@ const translations = {
     subtotalLabel: 'Subtotal',
     vatLabel: 'IVA',
     totalLabel: 'Total',
+    deliveryFeeLabel: 'Envío',
     emptyItem: '&nbsp;',
     qtyLabel: 'Cant',
     orderAlert: '✅ Pedido enviado (simulado). ¡Gracias!',
@@ -164,11 +170,12 @@ function updateQty(change) {
  * Updates the order summary list and totals.
  */
 function updateSummary() {
-  const { orderList, subtotal, vat, total } = domElements;
+  const { orderList, subtotal, vat, total, deliveryFeeContainer, deliveryFee: deliveryFeeEl } = domElements;
 
-  if (!orderList || !subtotal || !vat || !total) {
+  if (!orderList || !subtotal || !vat || !total || !deliveryFeeContainer || !deliveryFeeEl) {
     return;
   }
+
   orderList.innerHTML = '';
   let subtotalValue = 0;
   const vatRate = 0.12;
@@ -191,7 +198,15 @@ function updateSummary() {
   }
 
   const vatAmount = subtotalValue * vatRate;
-  const totalAmount = subtotalValue + vatAmount;
+  let totalAmount = subtotalValue + vatAmount;
+
+  if (isDeliveryIncluded) {
+    totalAmount += deliveryFee;
+    deliveryFeeContainer.classList.remove('hidden');
+    deliveryFeeEl.textContent = deliveryFee.toFixed(2);
+  } else {
+    deliveryFeeContainer.classList.add('hidden');
+  }
 
   subtotal.textContent = subtotalValue.toFixed(2);
   vat.textContent = vatAmount.toFixed(2);
@@ -262,7 +277,6 @@ function applyTranslations() {
   if (vatLabel) vatLabel.textContent = translations[currentLang].vatLabel;
   if (totalLabel) totalLabel.textContent = translations[currentLang].totalLabel;
   if (deliveryLabel) deliveryLabel.textContent = translations[currentLang].deliveryLabel;
-  updateSummary();
 }
 
 // F. Order Submission
@@ -296,6 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
     subtotal: document.getElementById('subtotal'),
     vat: document.getElementById('vat'),
     total: document.getElementById('total'),
+    deliveryFeeContainer: document.getElementById('deliveryFeeContainer'),
+    deliveryFee: document.getElementById('deliveryFee'),
     modalOverlay: document.getElementById('modalOverlay'),
     modalImage: document.getElementById('modalImage'),
     modalContent: document.querySelector('.modal-content'),
@@ -368,6 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
           domElements.deliveryNoBtn.classList.remove('active');
           domElements.deliveryNoBtn.setAttribute('aria-pressed', 'false');
         }
+        isDeliveryIncluded = true;
+        updateSummary();
       }
     });
   }
@@ -381,6 +399,8 @@ document.addEventListener('DOMContentLoaded', () => {
           domElements.deliveryYesBtn.classList.remove('active');
           domElements.deliveryYesBtn.setAttribute('aria-pressed', 'false');
         }
+        isDeliveryIncluded = false;
+        updateSummary();
       }
     });
   }
